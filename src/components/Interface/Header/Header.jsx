@@ -1,10 +1,7 @@
-import { useDispatch} from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { letSideBarOpen } from '../../../redux/Sidebar/Slice';
 import {useNavigate, useLocation} from 'react-router-dom'
 
 const Header = () => {
-    const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
     const isHome = location.pathname === '/'
@@ -27,7 +24,7 @@ const Header = () => {
         '>  
             {!isHome ? <BackButton className='bottom-6 flex-row-reverse' direction="left" name="Back" to={-1}/> : <div></div>}
 
-            <button className='flex hover:cursor-pointer' onClick={() => dispatch(letSideBarOpen())}>
+            <button className='flex hover:cursor-pointer'>
                 <FontAwesomeIcon icon="fa-solid fa-bars" className='text-primary-500'/>
             </button>
         </header>

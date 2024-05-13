@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom'
+import {  useNavigate, useParams } from 'react-router-dom'
 import CropIMG from '../../assets/Market/crop.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListedNFT } from '../../redux/Market/Slice'
+import { buyNFT, checkOwner, getListedNFT, unlistNFT } from '../../redux/Market/Slice'
 
 
 
@@ -12,14 +12,24 @@ const Product = () => {
 
 
     const {productId} = useParams()
-    
+
     const dispatch = useDispatch()
-    const {singleMarketData, loading, error} = useSelector(state => state.market)
+    const {singleMarketData, isOwner, loading, error} = useSelector(state => state.market)
 
     useEffect(() => {
         dispatch(getListedNFT(productId))
+        dispatch(checkOwner(productId))
     },[productId, dispatch])
 
+    const handleWithDraw = () => {
+        dispatch(unlistNFT(productId))
+    }
+
+    const handleBuyNFT = () =>{
+        if(window.confirm('Are you sure to buy this NFT !')) {
+            dispatch(buyNFT(productId))
+        }
+    }
     if(loading || error) return;
 
     return (
@@ -80,23 +90,40 @@ const Product = () => {
                         </div>
                     </div>
 
-                    <div className='flex flex-col gap-2 w-full p-4'>
-                        <button className='flex items-center justify-between uppercase bg-main-100
-                        text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                        px-4 py-3 rounded-lg'>
-                            Buy now
-                            <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake
-                            className='text-2xl'/>
-                        </button>
+                    {isOwner ? (
+                        <div className='flex flex-col gap-2 w-full p-4 font-semibold text-main-100'>
+                            This is your product 
+                            <button onClick={handleWithDraw}
+                            className='flex items-center justify-between uppercase bg-main-100
+                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                            px-4 py-3 rounded-lg text-left'>
+                                Withdraw
+                                <FontAwesomeIcon icon="fa-solid fa-cart-arrow-down" bounce
+                                className='text-2xl'/>
+                            </button>
+                        </div>
 
-                        <button className='flex items-center justify-between uppercase bg-main-100
-                        text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                        px-4 py-3 rounded-lg'>
-                            Make Offer
-                            <FontAwesomeIcon icon="fa-solid fa-tag" spin
-                            className='text-2xl'/>
-                        </button>
-                    </div>
+                    ): (
+                        <div className='flex flex-col gap-2 w-full p-4'>
+                            <button onClick={handleBuyNFT}
+                            className='flex items-center justify-between uppercase bg-main-100
+                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                            px-4 py-3 rounded-lg'>
+                                Buy now
+                                <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake
+                                className='text-2xl'/>
+                            </button>
+
+                            <button className='flex items-center justify-between uppercase bg-main-100
+                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                            px-4 py-3 rounded-lg'>
+                                Make Offer
+                                <FontAwesomeIcon icon="fa-solid fa-tag" spin
+                                className='text-2xl'/>
+                            </button>
+                        </div>
+                    )}
+
                 </div>
 
                 <div className='border-2 border-main-300 rounded bg-main-300

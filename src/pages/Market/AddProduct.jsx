@@ -16,7 +16,10 @@ const AddProduct = () => {
 
     const handlePriceChange = (event) => {
         const value = event.target.value
-        if(value < 0 || value > 1000) return alert("Please enter price from 1 to 1000")
+        if(value < 0 || value > 1000) {
+            alert("Please enter price from 1 to 1000")
+            return setPrice(0)
+        }
         setPrice(value)
     }
 

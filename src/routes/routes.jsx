@@ -5,8 +5,6 @@ import Menu from "../pages/Menu/Menu";
 import Form from "../pages/Form/Form";
 import History from "../pages/History/History";
 import Select from "../pages/History/Select";
-import Display from "../pages/Display/Display";
-import CropDetails from "../pages/Display/CropDetails";
 import Station from "../components/Interface/Station/Station";
 import StationList from "../components/Interface/Station/StationList";
 import Layout from "../components/Interface/Layout/Layout";
@@ -36,8 +34,6 @@ const privateRoutes = [
 
     {path: '/menu',component: Menu},
     {path: '/menu/inventory', component: Inventory},
-    {path: '/menu/crops-display', component: Display},
-    {path: '/menu/crops-display/detail/:cropID', component: CropDetails},
     {path: '/NFT/:cropID', component: AddNFT},
 
     {path: '/menu/form', component: Form},

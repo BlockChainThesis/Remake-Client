@@ -24,12 +24,6 @@ const Menu = () => {
             className: 'col-span-2'
         },
         {
-            path: '/menu/crops-display',
-            name: 'Display',
-            icon: 'fa-boxes-stacked',
-            className: 'col-span-2'
-        },
-        {
             path: '/menu/history/select',
             name: 'History',
             icon: 'fa-solid fa-clock',

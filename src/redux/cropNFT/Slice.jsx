@@ -122,6 +122,8 @@ export const getMyListedNFTInfo = createAsyncThunk(
 
             }))
             dispatch(setLoadingState(false))
+            console.log(listedNFT)
+
             return listedNFT
         }catch (error) {
             return rejectWithValue(error)

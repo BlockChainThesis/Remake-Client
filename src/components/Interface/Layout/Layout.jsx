@@ -1,13 +1,10 @@
 import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
-import { AnimatePresence, motion } from "framer-motion"
+import {motion } from "framer-motion"
 
 import Loader from "../Loader/Loader"
-import Sidebar from "../../UI/Mobile/Sidebar/Sidebar"
-import { useSelector } from "react-redux"
 
 const Layout = ({children}) => {
-    const isOpen = useSelector((state) => state.sidebar.isOpen)
     return (
         <motion.div
             id="mainLayout"
@@ -29,13 +26,8 @@ const Layout = ({children}) => {
         >
             <Header/>
             <Loader/>
-
-            <AnimatePresence mode="wait">
-                {isOpen &&<Sidebar/>}
-            </AnimatePresence>
-
             <div className="
-            laptop:max-w-2xl laptop:mx-auto relative
+            laptop:max-w-4xl laptop:mx-auto relative
             px-4 flex-1 flex items-stretch w-full h-full pb-10">
                     {children}
             </div>

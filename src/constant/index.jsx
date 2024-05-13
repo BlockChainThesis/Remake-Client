@@ -19,7 +19,7 @@ export const sensorDataABI = sensorContract.abi
 export const stationDataAddress = '0xf65826aDf72Ad338428AD934b13c2b73e32268C8'
 export const stationDataABI = stationDataContract.abi
 
-export const marketPlaceAddress = '0x6805Bf08AEe86Fad0a0dbB19730683efDa6ae150'
+export const marketPlaceAddress = '0xbD4102194C3efA6a47c9E10C2b750ABeD31f5BB0'
 export const marketPlaceABI = marketPlaceContract.abi
 
 export const authenticationAddress = '0x3F4BeFeb8744527161b0A4804AE6E1d15A9114F7'

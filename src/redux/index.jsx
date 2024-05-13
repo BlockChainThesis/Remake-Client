@@ -3,7 +3,6 @@ import loadingReducer from './Loading/Slice'
 import authReducer from './Auth/Slice'
 import controlerReducer from './Controller/Slice'
 import historyReducer from './History/History'
-import sidebarReducer from './Sidebar/Slice'
 import cropReducer from './Crop/Slice'
 import adafruitReducer from './Adafruit/Slice'
 import sensorReducer from './Sensor/Slice'
@@ -19,7 +18,6 @@ const store = configureStore({
         auth: authReducer,
         controller: controlerReducer,
         history: historyReducer,
-        sidebar: sidebarReducer,
         crop: cropReducer,
         adafruit: adafruitReducer,
         sensor: sensorReducer,

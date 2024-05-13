@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { marketPlaceABI, marketPlaceAddress } from "../../constant"
 import { ethers } from "ethers"
 import { setLoadingState } from "../Loading/Slice"
+import {getMyListedNFTInfo, getMyUnlistedNFTInfo } from "../../redux/cropNFT/Slice"
 
 const name = 'market'
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
     totalNFTs: 0, 
     highestPrice: -1,
     lowestPrice: -1,
+    isOwner: null, 
 }
 
 const { ethereum } = window
@@ -36,6 +38,41 @@ const createContract = () => {
     const cropInfoContract = new ethers.Contract(marketPlaceAddress, marketPlaceABI, signer)
     return cropInfoContract
 }
+
+export const buyNFT = createAsyncThunk(
+    'market/buyNFT', 
+    async (tokenId, {dispatch, rejectWithValue}) => {
+        try {
+            if(ethereum){
+                dispatch(setLoadingState(true))
+                const marketPlaceContact = createContract()
+                const response = await marketPlaceContact.buyNft(tokenId)
+                await response.wait()
+                dispatch(setLoadingState(false))
+                return response
+            } 
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+export const checkOwner = createAsyncThunk(
+    'market/checkOwner', 
+    async (tokenId, {dispatch, rejectWithValue}) => {
+        try {
+            if(ethereum){
+                dispatch(setLoadingState(true))
+                const marketPlaceContact = createContract()
+                const response = await marketPlaceContact.isOwnerOfListedNFT(tokenId)
+                dispatch(setLoadingState(false))
+                return response
+            } 
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
 
 
 export const listNFT = createAsyncThunk(
@@ -47,6 +84,28 @@ export const listNFT = createAsyncThunk(
                 const marketPlaceContact = createContract()
                 const response = await marketPlaceContact.listNFT(cropID, price)
                 await response.wait()
+                dispatch(getMyListedNFTInfo())
+                dispatch(getMyUnlistedNFTInfo())
+                dispatch(setLoadingState(false))
+                return
+            } 
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+export const unlistNFT = createAsyncThunk(
+    'market/unlistNFT', 
+    async (tokenId, {dispatch, rejectWithValue}) => {
+        try {
+            if(ethereum){
+                dispatch(setLoadingState(true))
+                const marketPlaceContact = createContract()
+                const response = await marketPlaceContact.unlistNFT(tokenId)
+                await response.wait()
+                dispatch(getMyListedNFTInfo())
+                dispatch(getMyUnlistedNFTInfo())
                 dispatch(setLoadingState(false))
                 return
             } 
@@ -240,6 +299,28 @@ export const Slice = createSlice({
                 state.error = action.error.message
                 state.lowestPrice = -1
             })
+            .addCase(checkOwner.fulfilled, (state,action) => {
+                state.loading = false
+                state.isOwner = action.payload
+            })
+            .addCase(checkOwner.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(checkOwner.rejected, (state, action) => {
+                state.error = action.error.message
+                state.isOwner = null
+            })
+            .addCase(buyNFT.fulfilled, (state,action) => {
+                state.loading = false
+                alert('Buy NFT successfully')
+            })
+            .addCase(buyNFT.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(buyNFT.rejected, (state, action) => {
+                state.error = action.error.message
+            })
+
         }
 })
 

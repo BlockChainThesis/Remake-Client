@@ -1,15 +1,22 @@
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkNFT } from "../../redux/cropNFT/Slice";
 import { urlDN } from "../../constant";
+import { listNFT, unlistNFT } from "../../redux/Market/Slice";
+
 
 const InventoryModal = ({type, data, setModalState}) => {
     let modalContent; 
     const modalContainer = document.getElementById('modalContainer')
     const {isNFT} = useSelector(state => state.cropNFT)
+
+    const [saleState, setSaleState] = useState(false);
+    const [price, setPrice] = useState('')
+
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -18,55 +25,87 @@ const InventoryModal = ({type, data, setModalState}) => {
         }
     },[])
 
-    
     switch(type) {
-        case 'inventory' : 
-        modalContent = (
-                <>
-                    <div className='flex  items-center justify-between rounded-t px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        YOUR NFT 
-                        <FontAwesomeIcon icon="fa-solid fa-xmark" 
-                        className="text-red-600 text-xl"
-                            onClick={() => setModalState(prev => ({
-                                ...prev, 
-                                isOpen: false,
-                            }))}
-                        />
-                    </div>
-                    <div className="w-full h-full rounded p-4">
-                        <div className="flex flex-col h-full gap-2 justify-between">
-                            <div className="flex text-2xl font-bold text-main-100 w-full justify-between">
-                                NFT no.
-                                <h1>
-                                    {data.tokenId}
-                                </h1>
-                            </div>
-  
-                            <img className="p-1 self-center rounded border border-main-100 w-[150px] h-[150px] object-cover" src={urlDN + data.uri}/>
-                            <ul className='font-mono flex flex-col gap-1 p-3 bg-main-400 rounded'>
+        case 'inventory' :{
+            const handlePriceChange = (event) => {
+                const value = event.target.value
+                if(value < 0 || value > 1000) {
+                    alert("Please enter price from 1 to 1000")
+                    return setPrice('')
+                }
+                setPrice(value)
+            }
+            const handlePublish = () => {
+                dispatch(listNFT({cropID: data.tokenId, price}))
+                setModalState(false)
+            }
+            modalContent = (
+                    <>
+                        <div className='flex  items-center justify-between rounded-t px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
+                            YOUR NFT 
+                            <FontAwesomeIcon icon="fa-solid fa-xmark" 
+                            className="text-red-600 text-xl"
+                                onClick={() => setModalState(prev => ({
+                                    ...prev, 
+                                    isOpen: false,
+                                }))}
+                            />
+                        </div>
+                        <div className="w-full h-full rounded p-4">
+                            <div className="flex flex-col h-full gap-2 justify-between">
+                                <div className="flex text-2xl font-bold text-main-100 w-full justify-between">
+                                    NFT no.
+                                    <h1>
+                                        {data.tokenId}
+                                    </h1>
+                                </div>
+      
+                                <img className="p-1 self-center rounded border border-main-100 w-[150px] h-[150px] object-cover" src={urlDN + data.uri}/>
+                                <ul className='font-mono flex flex-col gap-1 p-3 bg-main-400 rounded'>
+                                    {
+                                        Object.entries(data.crop).map(([key, value], index) => (    
+                                            <li key={index} className='flex gap-2 text-sm'>
+                                                <p className='uppercase font-semibold text-main-100 '>
+                                                    {key}: 
+                                                </p>
+    
+                                                <p className='text-primary-200'>
+                                                    {value === "" ? "None" : value}
+                                                </p>
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
                                 {
-                                    Object.entries(data.crop).map(([key, value], index) => (    
-                                        <li key={index} className='flex gap-2 text-sm'>
-                                            <p className='uppercase font-semibold text-main-100 '>
-                                                {key}: 
-                                            </p>
-
-                                            <p className='text-primary-200'>
-                                                {value === "" ? "None" : value}
-                                            </p>
-                                        </li>
-                                    ))
+                                    saleState ? (
+                                        <div className="relative flex gap-1 items-center text-sm font-mono text-main-100">
+                                            <label className="w-full">Your price</label>
+                                            <input required onChange={handlePriceChange} type="number" value={price}
+                                            className="bg-main-400 font-bold text-lg
+                                            focus:outline-none
+                                            p-1 rounded"/>
+                                            <p className="absolute right-14 text-lg font-bold">FLP</p>
+                                            <button disabled={!price || price === ''} onClick={handlePublish}
+                                             className=" focus:outline-none
+                                            hover:bg-main-400 hover:text-main-100
+                                            bg-main-100 p-2 text-main-400 rounded uppercase font-semibold">
+                                                Sell
+                                            </button>
+                                        </div>
+                                    ) : (
+                                    <button onClick={() => setSaleState(true)} className="text-center
+                                        hover:bg-main-100 hover:text-main-400 text-lg
+                                        font-mono w-full bg-main-400 p-2 rounded text-main-100 font-semibold tracking-wide">
+                                            Sell it on your marketplace
+                                    </button>
+                                    )
                                 }
-                            </ul>
-                            <Link to={`/market/add/${data.tokenId}`} className="text-center
-                            hover:bg-main-100 hover:text-main-400 text-lg
-                            font-mono w-full bg-main-400 p-2 rounded text-main-100 font-semibold tracking-wide">
-                                Sell it on your marketplace
-                            </Link>
-                        </div>  
-                    </div>
-                </>
+
+                            </div>  
+                        </div>
+                    </>
             )
+        }
         break;
         case 'crop' : 
             modalContent = (    
@@ -123,58 +162,66 @@ const InventoryModal = ({type, data, setModalState}) => {
                 </>
             )
         break;
-        case 'sale' : 
-        modalContent = (
-            <>
-                <div className='flex  items-center justify-between rounded-t px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                    YOUR MARKET ITEM 
-                    <FontAwesomeIcon icon="fa-solid fa-xmark" 
-                    className="text-red-600 text-xl"
-                        onClick={() => setModalState(prev => ({
-                            ...prev, 
-                            isOpen: false,
-                        }))}
-                    />
-                </div>
-                <div className="w-full h-full rounded p-4">
-                    <div className="flex flex-col h-full gap-2 justify-between">
-                        <div className="flex text-2xl font-bold text-main-100 w-full justify-between">
-                            Product no.
-                            <h1>
-                                {data.tokenId}
-                            </h1>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <img className="p-1 self-center rounded border border-main-100 w-[150px] h-[150px] object-cover" src={urlDN + data.uri}/>
-                            <h1 className="text-5xl font-bold text-main-100">{data.price} FLP
-                                <p className="text-xs text-primary-50 pl-2 font-normal">Current price</p>
-                            </h1>
-                            
-                        </div>
-                        <ul className='font-mono flex flex-col gap-1 p-3 bg-main-400 rounded'>
-                            {
-                                Object.entries(data.crop).map(([key, value], index) => (    
-                                    <li key={index} className='flex gap-2 text-sm'>
-                                        <p className='uppercase font-semibold text-main-100 '>
-                                            {key}: 
-                                        </p>
-
-                                        <p className='text-primary-200'>
-                                            {value === "" ? "None" : value}
-                                        </p>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                        <Link to={`/market/add/${data.tokenId}`} className="text-center
-                        hover:bg-main-100 hover:text-main-400 text-lg
-                        font-mono w-full bg-main-400 p-2 rounded text-main-100 font-semibold tracking-wide">
-                            Withdraw to your pocket
-                        </Link>
-                    </div>  
-                </div>
-            </>
-        )
+        case 'sale' : {
+            const handleUnList = () =>{
+                if(window.confirm('Are you sure ?')) {
+                    setModalState(false)
+                    return  dispatch(unlistNFT(data.tokenId))
+                }
+            }
+            modalContent = (
+                <>
+                    <div className='flex  items-center justify-between rounded-t px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
+                        YOUR MARKET ITEM 
+                        <FontAwesomeIcon icon="fa-solid fa-xmark" 
+                        className="text-red-600 text-xl"
+                            onClick={() => setModalState(prev => ({
+                                ...prev, 
+                                isOpen: false,
+                            }))}
+                        />
+                    </div>
+                    <div className="w-full h-full rounded p-4">
+                        <div className="flex flex-col h-full gap-2 justify-between">
+                            <div className="flex text-2xl font-bold text-main-100 w-full justify-between">
+                                Product no.
+                                <h1>
+                                    {data.tokenId}
+                                </h1>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <img className="p-1 self-center rounded border border-main-100 w-[150px] h-[150px] object-cover" src={urlDN + data.uri}/>
+                                <h1 className="text-5xl font-bold text-main-100">{data.price} FLP
+                                    <p className="text-xs text-primary-50 pl-2 font-normal">Current price</p>
+                                </h1>
+                                
+                            </div>
+                            <ul className='font-mono flex flex-col gap-1 p-3 bg-main-400 rounded'>
+                                {
+                                    Object.entries(data.crop).map(([key, value], index) => (    
+                                        <li key={index} className='flex gap-2 text-sm'>
+                                            <p className='uppercase font-semibold text-main-100 '>
+                                                {key}: 
+                                            </p>
+    
+                                            <p className='text-primary-200'>
+                                                {value === "" ? "None" : value}
+                                            </p>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                            <button onClick={handleUnList}
+                            className="text-center
+                            hover:bg-main-100 hover:text-main-400 text-lg
+                            font-mono w-full bg-main-400 p-2 rounded text-main-100 font-semibold tracking-wide">
+                                Withdraw to your pocket
+                            </button>
+                        </div>  
+                    </div>
+                </>
+            )
+        }
     break;
     }
 
