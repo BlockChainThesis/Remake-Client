@@ -106,7 +106,7 @@ const Martket = () => {
                                             <p className=''>{market.price}</p> 
                                             <p>FLP</p>
                                         </div>
-                                        <div className='font-mono text-xs text-primary-50 w-full overflow-scroll'>
+                                        <div className='font-mono text-xs text-primary-50 w-full overflow-scroll no-scrollbar'>
                                             Planting Date: {market.cropInfo.plantingDate}
                                         </div>
                                 </div>

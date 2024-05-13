@@ -38,7 +38,7 @@ const Product = () => {
                     <div className=' px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
                         Owner
                     </div>
-                    <div className='flex flex-col px-s4 mx-4 my-2 font-mono w-full overflow-x-scroll'>
+                    <div className='flex flex-col px-s4 mx-4 my-2 font-mono w-full overflow-x-scroll no-scrollbar'>
                         <div className=''>
                             <p className=' text-main-100 font-semibold p-0'>
                             Owner 
@@ -65,7 +65,7 @@ const Product = () => {
                             {singleMarketData.cropInfo.plantingDate}
                         </div>
                     </div>
-                    <img src={urlDN + singleMarketData.uri} className='m-2 border-2 border-main-100 p-0.5 self-center rounded-lg'/>
+                    <img src={urlDN + singleMarketData.uri} className='m-2 border-2 border-main-100 p-0.5 self-center rounded-lg w-[250px] h-[250px] object-cover'/>
                 </div>
 
                 <div className='border-2 border-main-300 rounded bg-main-300

@@ -40,7 +40,7 @@ export const createNFT = createAsyncThunk(
 
             const contract = createContract()
             const response = await contract.createCropNFT(NFTurl, cropID)
-            console.log(response)
+            await response.wait()
             dispatch(setLoadingState(false))
             return 
         }catch (error){
@@ -72,7 +72,6 @@ export const createURL = createAsyncThunk(
                     pinata_secret_api_key: import.meta.env.VITE_SECRET
                 }
             })
-            console.log(response);
             dispatch(setLoadingState(false))
             return response.data.IpfsHash
         }catch (error){
@@ -183,7 +182,6 @@ export const Slice = createSlice({
         })
         .addCase(createNFT.fulfilled, (state) => {
             state.loading = false
-            alert('Create NFT successfully')
         })
         .addCase(createNFT.pending, (state) => {
             state.loading = true

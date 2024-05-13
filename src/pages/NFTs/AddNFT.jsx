@@ -18,7 +18,7 @@ const AddNFT = () => {
         dispatch(createURL({cropID, image}))
     }
 
-    const handleCreateNFT = () => {
+    const handleCreateNFT = async () => {
         dispatch(createNFT({NFTurl, cropID}))
     }
 
@@ -45,9 +45,10 @@ const AddNFT = () => {
                         w-full rounded p-2 bg-main-100 text-main-400">{cropID}</p>
                     </div>
 
-                    <div className="flex flex-col items-start">
-                        <img src={image && URL.createObjectURL(image)} />
-                        <input type="file" onChange={handleImage} required/>
+                    <div className="flex flex-col items-start gap-3">
+                        <h1>Please choose your image</h1>
+                        <img className="w-[250px] h-[250px] object-cover self-center rounded shadow-lg" src={image && URL.createObjectURL(image)} />
+                        <input type="file" onChange={handleImage} accept="image/*"  required/>
                     </div>
 
                     <button className="hover:text-main-400 hover:bg-main-100

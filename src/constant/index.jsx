@@ -30,3 +30,6 @@ export const tokenABI = tokenContract.abi
 
 export const cropNFTAddress = '0x32fc294C2B99fB75782CbD42f5e9F5814Ea93541'
 export const cropNFTABI = cropNFTContract.abi
+
+     
+export const urlDN = 'https://black-flying-guanaco-398.mypinata.cloud/ipfs/'

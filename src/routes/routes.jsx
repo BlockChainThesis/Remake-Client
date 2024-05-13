@@ -1,3 +1,4 @@
+//Component
 import Login from "../pages/Auth/Auth";
 import Home from "../pages/Home/Home";
 import Menu from "../pages/Menu/Menu";
@@ -14,13 +15,14 @@ import Martket from "../pages/Market/Market";
 import Product from "../pages/Market/Product";
 import NFTs from "../pages/NFTs/NFTs";
 import MyWallet from "../pages/Wallet/MyWallet";
-
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
-import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
 import AddNFT from "../pages/NFTs/AddNFT";
 import AddProduct from "../pages/Market/AddProduct";
 import Inventory from "../pages/Inventory/Inventory";
+
+//Library 
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const publicRoutes = [
     {path: '/', component: Home},
@@ -50,6 +52,7 @@ const privateRoutes = [
 const userRoutes = [
     {path: '/market',component: Martket},
     {path: '/market/:productId',component: Product},
+    {path: '/inventory', component: Inventory},
     {path: '/NFTs', component: NFTs},
     {path: '/wallet', component: MyWallet},
 ]
@@ -86,7 +89,7 @@ const MainRoutes = () => {
                             />
                         )
                     })}
-                    {userRoutes.map((route, index) => {
+                    {!isAdmin && userRoutes.map((route, index) => {
                         const Page = route.component
                         return (
                             <Route key={index} path={route.path}
@@ -98,6 +101,7 @@ const MainRoutes = () => {
                             />
                         )
                     })}
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AnimatedRoutes>
     )
