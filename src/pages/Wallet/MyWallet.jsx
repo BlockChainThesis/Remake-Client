@@ -17,8 +17,7 @@ const MyWallet = () => {
     if (loading || error ) return
     return (
         <>
-            <div className="w-full h-full flex flex-col p-4 rounded-2xl gap-4
-            bg-transparent border-4 border-main-200">
+            <div className="w-full h-full flex flex-col gap-4">
                 <div className="flex gap-2 items-center text-3xl">
                     <FontAwesomeIcon icon="fa-solid fa-user" 
                     className=" p-2.5 rounded-full bg-main-100 text-primary-500"/>

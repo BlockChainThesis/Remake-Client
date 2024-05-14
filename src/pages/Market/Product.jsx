@@ -34,21 +34,13 @@ const Product = () => {
 
     return (
         <>
-            <div className="w-full h-full flex flex-col p-4 rounded-2xl gap-4
-            bg-transparent border-4 border-main-200">
-                <div className='text-3xl font-semibold text-primary-500 uppercase'>
-                    {singleMarketData.cropInfo.cropType}
-                        <div className='font-mono text-base'>
-                            Owned by <span className='text-primary-400'>{singleMarketData.owner}</span>
-                        </div>
-                </div>
-
+            <div className="w-full h-full flex flex-col gap-4 ">
                 <div className='border-2 border-main-300 rounded bg-main-300
                 flex flex-col gap-2 '>
                     <div className=' px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
                         Owner
                     </div>
-                    <div className='flex flex-col px-s4 mx-4 my-2 font-mono w-full overflow-x-scroll no-scrollbar'>
+                    <div className='flex flex-col mx-4 my-2 font-mono w-full overflow-x-scroll no-scrollbar'>
                         <div className=''>
                             <p className=' text-main-100 font-semibold p-0'>
                             Owner 

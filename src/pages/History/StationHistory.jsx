@@ -16,7 +16,7 @@ const StationHistory = () => {
     if (!stationData) return;
     const RenderItem = ({currrentItems}) => {
         return(
-            <div className='flex flex-col gap-1'>
+            <div className='flex flex-col gap-1.5'>
             {currrentItems && currrentItems.map((item, index) => 
                 <StationItem key={index} station={item} />
             )}
@@ -36,21 +36,21 @@ const StationHistory = () => {
     
       
         return (
-            <div className='flex flex-col h-full justify-between'>
+            <div className='flex flex-col justify-between'>
                 <RenderItem currrentItems={currentItems}/>
                 <ReactPaginate
-                    className='
-                    flex self-center gap-2 px-2 py-1 rounded-sm text-main-300 font-mono font-semibold'
+                    className='mt-6
+                    flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold'
                     pageClassName='px-2 rounded-full'
-                    activeClassName='bg-main-300 text-white'
+                    activeClassName='bg-main-100 text-main-300'
                     breakLabel="..."
 
                     previousLabel=<FontAwesomeIcon icon="fa-solid fa-chevron-left" />
-                    previousClassName="flex justify-center items-center px-0.5 rounded-full"
+                    previousClassName="flex  cursor-pointer justify-center items-center w-6 h-6 rounded-full bg-main-100"
                     previousLinkClassName="text-main-400 h-fit"
 
                     nextLabel=<FontAwesomeIcon icon="fa-solid fa-chevron-right "/>
-                    nextClassName="flex justify-center items-center px-0.5 rounded-full"
+                    nextClassName="flex cursor-pointer justify-center items-center w-6 h-6 rounded-full bg-main-100"
                     nextLinkClassName="text-main-400 h-fit"
 
                     onPageChange={handlePageClick}
@@ -80,13 +80,14 @@ const StationHistory = () => {
 
     const StationItem = ({station}) => {
         return (
-            <li  className='w-full py-1 rounded border-b font-mono text-base flex justify-between items-center'>
+            <li  className='bg-main-100 p-2 cursor-pointer
+            w-full py-1 rounded border-b font-mono text-base flex justify-between items-center'>
                 <div className='flex flex-col w-full '>
-                    <div className="flex w-full justify-between font-bold text-main-400">
+                    <div className="flex w-full items-center justify-between font-bold text-main-400">
                         <p>
                             {station.stationId}
                         </p>
-                        <p className="text-xs text-main-200 font-light">
+                        <p className="text-xs italic text-main-200 font-light">
                             {formattedDate(new Date (station.createAt))}
                         </p>
                     </div>
@@ -95,7 +96,7 @@ const StationHistory = () => {
                             {station.longitude}:
                             {station.latitude}
                         </p>
-                        <Link className="underline hover:text-main-200"  to='/menu/station'>
+                        <Link className="underline hover:text-main-200"  to={`/menu/station/${station.stationId}`}>
                             View more at Station 
                         </Link>
                     </div>
@@ -106,15 +107,15 @@ const StationHistory = () => {
 
 
 
-    return (
-        <>
-        <div className='flex-nowrap flex flex-col w-full gap-3 bg-white p-3 rounded-lg'>
-            <p className='text-xl font-bold text-main-300 self-start'>
-                Station History
-            </p>
-            <PaginatedItems itemsPerPage={8} items={stationData}/>
+    return ( 
+        <div className='border-2 border-main-300 rounded bg-main-300 w-full' >
+            <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
+                Station history
+            </div>
+            <div className='flex-nowrap flex flex-col gap-3 m-3 h-auto '>
+                <PaginatedItems itemsPerPage={8} items={stationData}/>
+            </div>
         </div>
-        </>
     )
 }
 

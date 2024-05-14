@@ -1,10 +1,7 @@
 import CustomChart from '../../UI/Chart/CustomChart'
-import { useSelector } from 'react-redux'
 import { sensorStyleKit } from '../Sensors/Sensor'
-import { sensorType } from '../Sensors/Sensor'
 
 const ChartPortal = ({stationType, data}) => {
-    const activeSensor = useSelector(state => state.dashboard.sensorActiveID)
     if (!data || !stationType) return
     const chartData = {
         labels: [0, 10, 15, 20],

@@ -86,19 +86,16 @@ const Device = ({device}) => {
 
     return (
         <>
-            <div className='
-            absolute w-full h-full
-            flex gap-3 items-center justify-center
-            bg-white rounded-lg px-3 py-2'>
+            <div className='flex gap-2 items-center bg-primary-50 rounded p-2'>
                 {deviceGroup1 ? (
-                        <img className='max-w-[64px] desktop:max-w-[150px]' src={NutritionMixing} />
+                        <img className='max-w-[55px] desktop:max-w-[150px]' src={NutritionMixing} />
                     ) : deviceGroup2 ? (
-                        <img className='max-w-[64px] desktop:max-w-[150px]' src={RegionPump} />
+                        <img className='max-w-[55px] desktop:max-w-[150px]' src={RegionPump} />
                     ) : (
-                        <img className='max-w-[64px] desktop:max-w-[150px]' src={MainPump} />
+                        <img className='max-w-[55px] desktop:max-w-[150px]' src={MainPump} />
                     )}
-                <div className='flex flex-col gap-6'>
-                    <p className='font-bold text-sm desktop::text-2xl font-mono'>{nameOfDevice}</p>
+                <div className='flex flex-col gap-1'>
+                    <p className='text-main-300 font-bold text-xs desktop:text-2xl font-mono'>{nameOfDevice}</p>
                     <Switch
                         onChange={handleChange}
                         isEnabled={user}

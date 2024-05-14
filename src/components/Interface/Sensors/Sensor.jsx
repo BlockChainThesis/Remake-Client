@@ -37,7 +37,7 @@ const sensorStyleKit = (station, type, active = -1) => {
         case 'background':
             // return active ? "bg-neutral-400" : 'bg-white';
             return active ? stationType === 'air' ? "bg-neutral-400" :
-            stationType === 'water' ? "bg-blue-300" : "bg-yellow-700" : 'bg-white';
+            stationType === 'water' ? "bg-blue-300" : "bg-yellow-700" : 'bg-primary-100';
         case 'text': 
             // return active ?  'text-white': "text-neutral-400";
             return !active ? stationType === 'air' ? "text-neutral-400" :
@@ -68,22 +68,22 @@ const Sensor = ({station, id, unit ,value }) => {
         <>
             <div 
             onClick={onClickHandler}
-            className={`flex gap-8 w-full h-full absolute
+            className={`flex gap-4 w-full h-full 
             ${sensorStyleKit(station, 'background',sensorActive)}
-            items-center justify-evenly rounded-lg px-6 py-1`}>
+            items-center rounded px-3 py-2`}>
                 <FontAwesomeIcon
                     icon={`fa-solid ${sensorStyleKit(station,'icon')}`}
-                    className={`desktop:text-9xl
-                    text-8xl ${sensorStyleKit(station,'text', sensorActive)}`}
+                    className={`laptop:text-9xl
+                    text-4xl ${sensorStyleKit(station,'text', sensorActive)}`}
                 />
                 <div className="h-full flex flex-col justify-center">
-                        <p className={`desktop:text-5xl
-                        font-bold w-full text-2xl uppercase
+                        <p className={`laptop:text-5xl
+                        font-bold w-full text-lg uppercase
                             ${sensorStyleKit(station,'text', sensorActive)}
                         `}>
                             {stationTypeSet(id)}
                         </p>
-                        <p className={`desktop:text-5xl font-bold text-2xl 
+                        <p className={`laptop:text-5xl font-bold text-lg 
                             ${sensorStyleKit(station, 'text', sensorActive)}`}>
                             {value}
                             <span>{unit}</span>

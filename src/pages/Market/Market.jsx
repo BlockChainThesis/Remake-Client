@@ -44,14 +44,10 @@ const Martket = () => {
 
     return (
         <>
-            <div className="w-full h-full flex flex-col p-4 rounded-2xl gap-4
-            bg-transparent
-            border-4 border-main-200">
-                {/* Profile  */}
-                {/* <div className={`${classes.profile} bg-white rounded-lg p-2`}>    */}
-                <div className=' rounded-lg p-2'>   
+            <div className="w-full h-full flex flex-col gap-4">
+                <div>   
                     <div className='flex justify-center w-full'>
-                        <img src={Profile} className='max-w-[380px]'/>    
+                        <img src={Profile} className='max-w-[400px]'/>    
                     </div>
                     <div className='flex flex-col w-full'>
                         <div>

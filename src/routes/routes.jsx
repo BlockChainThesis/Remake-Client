@@ -5,8 +5,8 @@ import Menu from "../pages/Menu/Menu";
 import Form from "../pages/Form/Form";
 import History from "../pages/History/History";
 import Select from "../pages/History/Select";
-import Station from "../components/Interface/Station/Station";
-import StationList from "../components/Interface/Station/StationList";
+import Station from "../pages/Station/Station";
+import StationList from "../pages/Station/StationList";
 import Layout from "../components/Interface/Layout/Layout";
 import StationHistory from "../pages/History/StationHistory";
 import Martket from "../pages/Market/Market";
@@ -14,7 +14,6 @@ import Product from "../pages/Market/Product";
 import NFTs from "../pages/NFTs/NFTs";
 import MyWallet from "../pages/Wallet/MyWallet";
 import AddNFT from "../pages/NFTs/AddNFT";
-import AddProduct from "../pages/Market/AddProduct";
 import Inventory from "../pages/Inventory/Inventory";
 
 //Library 
@@ -30,7 +29,6 @@ const publicRoutes = [
 const privateRoutes = [
     {path: '/market',component: Martket},
     {path: '/market/:productId',component: Product},
-    {path: '/market/add/:cropID',component: AddProduct},
 
     {path: '/menu',component: Menu},
     {path: '/menu/inventory', component: Inventory},

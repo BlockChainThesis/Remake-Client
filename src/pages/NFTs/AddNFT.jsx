@@ -25,29 +25,23 @@ const AddNFT = () => {
     if(loading || error) return
 
     return (
-        <div className="p-4 rounded-2xl gap-4 w-full
-        bg-transparent border-4 border-main-200 flex flex-col">
-            <div className="text-main-100 flex gap-2 items-center text-3xl bg-primary-400  w-fit rounded-md px-4 py-2">
-                <FontAwesomeIcon icon="fa-solid fa-circle-nodes" className=""/>
-                <p className="text-base font-bold tracking-wider">
-                    YOUR NFT
-                </p>
-            </div>
-            <div className='border-2 border-main-300 rounded bg-primary-200'>
+        <div className="gap-4 w-full flex flex-col">
+
+            <div className='border-2 border-main-300 rounded bg-main-300'>
                 <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
                     Enter your information
                 </div>
                 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3 px-3 py-2 pb-4 w-full font-mono">
                     <div className="">
-                        <label className="font-bold text-primary-600 uppercase">CROP ID</label>
+                        <label className="font-bold text-main-100 uppercase">CROP ID</label>
                         <p disabled className="text-sm font-semibold
                         w-full rounded p-2 bg-main-100 text-main-400">{cropID}</p>
                     </div>
 
-                    <div className="flex flex-col items-start gap-3">
+                    <div className="flex flex-col items-start gap-3 text-main-100">
                         <h1>Please choose your image</h1>
-                        <img className="w-[250px] h-[250px] object-cover self-center rounded shadow-lg" src={image && URL.createObjectURL(image)} />
+                        <img className="max-w-[250px] max-h-[250px] object-cover self-center rounded shadow-lg" src={image && URL.createObjectURL(image)} />
                         <input type="file" onChange={handleImage} accept="image/*"  required/>
                     </div>
 
@@ -57,7 +51,7 @@ const AddNFT = () => {
                     </button>
                     <div className="">
                         <div className="relative">
-                            <label className="font-bold text-primary-600 uppercase">NFT URL</label>
+                            <label className="font-bold text-main-100 uppercase">NFT URL</label>
                             <textarea value={`https://black-flying-guanaco-398.mypinata.cloud/ipfs/${NFTurl && NFTurl}`}
                             className="focus:outline-none text-sm font-semibold
                             w-full rounded p-2 bg-main-100 text-main-400"/>
@@ -66,7 +60,7 @@ const AddNFT = () => {
                 </form>
             </div>
 
-            <div className='border-2 border-main-300 rounded bg-primary-200'>
+            <div className='border-2 border-main-300 rounded bg-main-300'>
                 <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
                     CREATE NFT
                 </div>

@@ -150,7 +150,6 @@ export const getAllListedNFTs = createAsyncThunk(
     }
 )
 
-
 export const getListedNFT = createAsyncThunk( 
     'market/getListedNFT', 
     async (tokenId, {rejectWithValue, dispatch}) => {
@@ -234,6 +233,7 @@ export const getLowestPrice = createAsyncThunk(
         }
     }
 )
+
 export const Slice = createSlice({
     name: name,
     initialState,
@@ -310,7 +310,7 @@ export const Slice = createSlice({
                 state.error = action.error.message
                 state.isOwner = null
             })
-            .addCase(buyNFT.fulfilled, (state,action) => {
+            .addCase(buyNFT.fulfilled, (state) => {
                 state.loading = false
                 alert('Buy NFT successfully')
             })

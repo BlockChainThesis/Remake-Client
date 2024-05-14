@@ -1,9 +1,7 @@
 import Device from './Device'
-import CustomSlider from '../../UI/Slider/CustomSlider'
 const Controller = ( ) => {
     const renderDevice = (number) => {
         const devices = []
-
         for (let i = 1; i <= number; i++) devices.push(i)
 
         return devices.map((item, index) => {
@@ -18,25 +16,11 @@ const Controller = ( ) => {
             )
         })
     }
-    const settings = {
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        arrows: false,
-        swipe: true,
-        adaptiveHeight: true,
-    }
 
     return (
         <>  
-            <div className="w-full h-full absolute 
-            
-            ">
-                <CustomSlider setting={settings}>
-                    {renderDevice(8)}
-                </CustomSlider>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-2 m-3">
+                {renderDevice(8)}
             </div>
         </>
     )

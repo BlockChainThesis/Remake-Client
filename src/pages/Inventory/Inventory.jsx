@@ -48,8 +48,7 @@ const Inventory = () => {
         <>  
 
         {modalState.isOpen && <InventoryModal data={modalState.data} type={modalState.type} setModalState={setModalState}/>}
-            <div className="p-4 rounded-2xl gap-4 w-full
-            bg-transparent border-4 border-main-200 flex flex-col">
+            <div className="gap-4 w-full flex flex-col">
                 <div className='border-2 border-main-300 rounded bg-main-300 h-full max-h-[450px] overflow-y-scroll no-scrollbar'>
                     <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
                         Your Crop
