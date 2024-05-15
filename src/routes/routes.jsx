@@ -20,6 +20,7 @@ import Inventory from "../pages/Inventory/Inventory";
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
+import UserMenu from "../pages/UserMenu/UserMenu";
 
 const publicRoutes = [
     {path: '/', component: Home},
@@ -27,13 +28,14 @@ const publicRoutes = [
 ]
 
 const privateRoutes = [
+    
+    {path: '/menu',component: Menu},
+
     {path: '/market',component: Martket},
     {path: '/market/:productId',component: Product},
 
-    {path: '/menu',component: Menu},
     {path: '/menu/inventory', component: Inventory},
     {path: '/NFT/:cropID', component: AddNFT},
-
     {path: '/menu/form', component: Form},
     {path: '/menu/history/select', component: Select},
     {path: '/menu/history/:deviceType', component: History},
@@ -44,6 +46,7 @@ const privateRoutes = [
     {path: '/wallet', component: MyWallet},
 ]
 const userRoutes = [
+    {path: '/menu',component: UserMenu},
     {path: '/market',component: Martket},
     {path: '/market/:productId',component: Product},
     {path: '/inventory', component: Inventory},

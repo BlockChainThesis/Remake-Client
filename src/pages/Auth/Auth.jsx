@@ -39,8 +39,7 @@ const Login = () => {
     ]
 
     useEffect(() => {
-        if(isAdmin && user) navigate('/menu')
-        else if (user) navigate('/market')
+        if(user) navigate('/menu')
     },[user, navigate, isAdmin])
 
     return (

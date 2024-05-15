@@ -7,10 +7,8 @@ import { setLoadingState } from "../Loading/Slice";
 const { ethereum } = window
 //Create Controller Contact 
 const createControllerContract = () => {
-    // const privateKey = import.meta.env.VITE_PRIVATE_KEY //to use this, create .env at root and include your private key there
     const provider = new ethers.providers.Web3Provider(ethereum)
     const signer = provider.getSigner() //comment this
-    // const wallet = new ethers.Wallet(privateKey, provider) //uncomment this
     const controllerContract = new ethers.Contract(controllerAddress, controllerABI, signer) //change signer to wallet
     return controllerContract
 }
@@ -46,8 +44,6 @@ export const getAllControllersInfo = createAsyncThunk(
                 }))
                 dispatch(setLoadingState(false))
                 return structuredControllersInfo
-            } else {
-                //todo
             }
         }catch (error) {
             console.log(error)

@@ -19,16 +19,16 @@ export const sensorDataABI = sensorContract.abi
 export const stationDataAddress = '0xf65826aDf72Ad338428AD934b13c2b73e32268C8'
 export const stationDataABI = stationDataContract.abi
 
-export const marketPlaceAddress = '0x5ED71a00958e2F749bB5E7f3e57f4646DA486595'
+export const marketPlaceAddress = '0xA87B16E4Dc660d35334Fe45C2658Da42C5e78c46'
 export const marketPlaceABI = marketPlaceContract.abi
 
 export const authenticationAddress = '0x3F4BeFeb8744527161b0A4804AE6E1d15A9114F7'
 export const authenticationABI = authenticationContract.abi
 
-export const tokenAddress = '0x7851d6FbeA3f3906452AC1400dF407c7A9391D52'
+export const tokenAddress = '0x8C44bD007D7Abb7a078a4929A259B977723Dfe61'
 export const tokenABI = tokenContract.abi
 
-export const cropNFTAddress = '0x1C6565d364eE6571E245665CA9E1afCcCA4Fff69'
+export const cropNFTAddress = '0xdf90cC2b39894F9dC994CCeB0dAeE20ed76E8c66'
 export const cropNFTABI = cropNFTContract.abi
 
      

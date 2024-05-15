@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { marketPlaceABI, marketPlaceAddress } from "../../constant"
 import { ethers } from "ethers"
 import { setLoadingState } from "../Loading/Slice"
-import {getMyListedNFTInfo, getMyUnlistedNFTInfo } from "../../redux/cropNFT/Slice"
+import {approveNFT, getMyListedNFTInfo, getMyUnlistedNFTInfo } from "../../redux/cropNFT/Slice"
+import { approveAllMyBalance } from "../Wallet/Slice"
 
 const name = 'market'
 const initialState = {
@@ -44,6 +45,7 @@ export const buyNFT = createAsyncThunk(
     async (tokenId, {dispatch, rejectWithValue}) => {
         try {
             if(ethereum){
+                await dispatch(approveAllMyBalance())
                 dispatch(setLoadingState(true))
                 const marketPlaceContact = createContract()
                 const response = await marketPlaceContact.buyNft(tokenId)
@@ -80,6 +82,7 @@ export const listNFT = createAsyncThunk(
     async ({cropID,price}, {dispatch, rejectWithValue}) => {
         try {
             if(ethereum){
+                await dispatch(approveNFT(cropID))
                 dispatch(setLoadingState(true))
                 const marketPlaceContact = createContract()
                 const response = await marketPlaceContact.listNFT(cropID, price)
@@ -149,6 +152,7 @@ export const getAllListedNFTs = createAsyncThunk(
         }
     }
 )
+
 
 export const getListedNFT = createAsyncThunk( 
     'market/getListedNFT', 
@@ -233,7 +237,6 @@ export const getLowestPrice = createAsyncThunk(
         }
     }
 )
-
 export const Slice = createSlice({
     name: name,
     initialState,

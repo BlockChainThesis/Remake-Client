@@ -32,6 +32,27 @@ const createMarketContract = () => {
     return contract
 }
 
+
+export const approveNFT = createAsyncThunk(
+    'cropNFT/approveNFT', 
+    async (tokenId, {dispatch, rejectWithValue}) => {
+        try {
+            if(ethereum){
+                dispatch(setLoadingState(true))
+                const cropNFTContract = createContract()
+                const response = await cropNFTContract.approveNFT(marketPlaceAddress, tokenId)
+                await response.wait()
+                console.log("Approve successfully")
+                dispatch(setLoadingState(false))
+                return
+            } 
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+
+
 export const createNFT = createAsyncThunk(
     'cropNFT/createNFT', 
     async ({NFTurl, cropID}, {rejectWithValue, dispatch} ) => {

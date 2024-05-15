@@ -10,7 +10,7 @@ const Layout = ({children}) => {
             id="mainLayout"
             className="flex flex-col min-h-dvh overflow-hidden"
             transition={{
-                duration: 0.6,
+                duration: 1,
             }}
             initial={{
                 opacity: 0,
