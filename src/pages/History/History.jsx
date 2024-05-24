@@ -21,26 +21,16 @@ const History = () => {
     },[deviceType, dispatch])
 
     const controllersInfo = useSelector(state => state.controller.controllersInfo)
+    console.log(controllersInfo)
+    // const controllersInfo = {
+
+    // }
     const sensorsData = useSelector(state => state.sensor.sensorsData)
     const reversedControllerInfo = [...controllersInfo].reverse()
 
 
     const contractAddressUrl = `https://sepolia.etherscan.io/address/${controllerAddress}`
     const sensorAddressUrl = `https://sepolia.etherscan.io/address/${sensorDataAddress}`
-
-    const handleExportControllerInfoToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(reversedControllerInfo)
-        const workbook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'ControllerInfo')
-        XLSX.writeFile(workbook, 'ControllerInfo.xlsx')
-    }
-
-    const handleExportSensorsDataToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(sortedSensorsData)
-        const workbook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'SensorData')
-        XLSX.writeFile(workbook, 'SensorData.xlsx')
-    }
 
     const RenderItem = ({currrentItems}) => {
         return(

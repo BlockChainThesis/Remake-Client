@@ -1,9 +1,9 @@
-import {  useNavigate, useParams } from 'react-router-dom'
-import CropIMG from '../../assets/Market/crop.png'
+import { useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { buyNFT, checkOwner, getListedNFT, unlistNFT } from '../../redux/Market/Slice'
+import Window from '../../components/Interface/Window/Window'
 
 
 
@@ -33,14 +33,10 @@ const Product = () => {
     if(loading || error) return;
 
     return (
-        <>
+        <>  
             <div className="w-full h-full flex flex-col gap-4 ">
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2 '>
-                    <div className=' px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Owner
-                    </div>
-                    <div className='flex flex-col mx-4 my-2 font-mono w-full overflow-x-scroll no-scrollbar'>
+                <Window label='Author'>
+                    <div className='flex flex-col p-4 font-mono w-full overflow-x-scroll no-scrollbar'>
                         <div className=''>
                             <p className=' text-main-100 font-semibold p-0'>
                             Owner 
@@ -56,74 +52,70 @@ const Product = () => {
                             <p className='text-primary-100'>
                                 {singleMarketData.owner}
                             </p>
+                        </div>
                     </div>
-                    </div>
-                </div>
+                </Window>
 
-                <div className='border-2 border-main-300 rounded bg-main-300 flex flex-col'>
-                    <div className='flex justify-between items-center px-2 py-1 border-b border-primary-500 bg-main-100 font-bold font-mono text-main-300'>
+                <Window label={(
+                    <div className='justify-between flex items-center'>
                         CROP
                         <div className='text-sm'>
-                            {singleMarketData.cropInfo.plantingDate}
+                        {singleMarketData.cropInfo.plantingDate}
                         </div>
                     </div>
-                    <img src={urlDN + singleMarketData.uri} className='m-2 border-2 border-main-100 p-0.5 self-center rounded-lg w-[250px] h-[250px] object-cover'/>
-                </div>
-
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Current Price
+                )}>
+                    <div className='flex flex-col w-full justify-center p-4'>
+                        <img src={urlDN + singleMarketData.uri} className='m-2 border-2 border-main-100 p-0.5 self-center rounded-lg w-[250px] h-[250px] object-cover'/>
                     </div>
-                    <div className='px-4 py-1 font-mono font-bold text-main-100 text-5xl flex gap-2'>
-                        {singleMarketData.price}
-                        <div className=''>
-                            FLP
-                        </div>
-                    </div>
+                </Window>
 
-                    {isOwner ? (
-                        <div className='flex flex-col gap-2 w-full p-4 font-semibold text-main-100'>
-                            This is your product 
-                            <button onClick={handleWithDraw}
-                            className='flex items-center justify-between uppercase bg-main-100
-                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                            px-4 py-3 rounded-lg text-left'>
-                                Withdraw
-                                <FontAwesomeIcon icon="fa-solid fa-cart-arrow-down" bounce
-                                className='text-2xl'/>
-                            </button>
+                <Window label='Price'>
+                    <div className='p-4'>
+                        <div className='font-mono font-bold text-main-100 text-5xl flex gap-2'>
+                            {singleMarketData.price}
+                            <div className=''>
+                                FLP
+                            </div>
                         </div>
 
-                    ): (
-                        <div className='flex flex-col gap-2 w-full p-4'>
-                            <button onClick={handleBuyNFT}
-                            className='flex items-center justify-between uppercase bg-main-100
-                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                            px-4 py-3 rounded-lg'>
-                                Buy now
-                                <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake
-                                className='text-2xl'/>
-                            </button>
+                        {isOwner ? (
+                            <div className='flex flex-col gap-2 w-full font-semibold text-main-100'>
+                                This is your product 
+                                <button onClick={handleWithDraw}
+                                className='flex items-center justify-between uppercase bg-main-100
+                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                                px-4 py-3 rounded-lg text-left'>
+                                    Withdraw
+                                    <FontAwesomeIcon icon="fa-solid fa-cart-arrow-down" bounce
+                                    className='text-2xl'/>
+                                </button>
+                            </div>
 
-                            <button className='flex items-center justify-between uppercase bg-main-100
-                            text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                            px-4 py-3 rounded-lg'>
-                                Make Offer
-                                <FontAwesomeIcon icon="fa-solid fa-tag" spin
-                                className='text-2xl'/>
-                            </button>
-                        </div>
-                    )}
+                        ): (
+                            <div className='flex flex-col gap-2 w-full '>
+                                <button onClick={handleBuyNFT}
+                                className='flex items-center justify-between uppercase bg-main-100
+                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                                px-4 py-3 rounded-lg'>
+                                    Buy now
+                                    <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake
+                                    className='text-2xl'/>
+                                </button>
 
-                </div>
-
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Detailed Information
+                                <button className='flex items-center justify-between uppercase bg-main-100
+                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
+                                px-4 py-3 rounded-lg'>
+                                    Make Offer
+                                    <FontAwesomeIcon icon="fa-solid fa-tag" spin
+                                    className='text-2xl'/>
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    <div className='px-4 py-2'>
+                </Window>
+
+                <Window label='Detailed Information'>
+                    <div className='p-4'>
                         <ul className='font-mono flex flex-col gap-1'>
                             {
                                 Object.entries(singleMarketData.cropInfo).map(([key, value], index) => key !== "additionalInfo" && (    
@@ -140,17 +132,13 @@ const Product = () => {
                             }
                         </ul>
                     </div>
-                </div>
-                
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Description
-                    </div>
+                </Window>
+
+                <Window label='Description'>
                     <div className='px-4 py-2 text-main-100 font-semibold font-mono'>
                         {singleMarketData.cropInfo.additionalInfo === "" ? "Nothing" : singleMarketData.cropInfo.additionalInfo}
                     </div>
-                </div>
+                </Window>
             </div>
         </>
     )

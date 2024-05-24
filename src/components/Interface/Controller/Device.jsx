@@ -86,7 +86,7 @@ const Device = ({device}) => {
 
     return (
         <>
-            <div className='flex gap-2 items-center bg-primary-50 rounded p-2'>
+            <div className='flex gap-2 items-center bg-main-100 rounded p-2'>
                 {deviceGroup1 ? (
                         <img className='max-w-[55px] desktop:max-w-[150px]' src={NutritionMixing} />
                     ) : deviceGroup2 ? (
@@ -95,7 +95,7 @@ const Device = ({device}) => {
                         <img className='max-w-[55px] desktop:max-w-[150px]' src={MainPump} />
                     )}
                 <div className='flex flex-col gap-1'>
-                    <p className='text-main-300 font-bold text-xs desktop:text-2xl font-mono'>{nameOfDevice}</p>
+                    <p className='text-main-300 font-semibold text-xs'>{nameOfDevice}</p>
                     <Switch
                         onChange={handleChange}
                         isEnabled={user}

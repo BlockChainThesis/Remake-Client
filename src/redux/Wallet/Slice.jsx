@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { marketPlaceABI, marketPlaceAddress, tokenABI, tokenAddress } from "../../constant"
+import { marketPlaceAddress,marketPlaceABI,  tokenABI, tokenAddress  } from "../../constant"
 import { ethers } from "ethers"
 import { setLoadingState } from "../Loading/Slice"
-import { getUserAddress } from "../../utils/func"
 
 
 const name = 'wallet'
@@ -21,14 +20,13 @@ const createContract = () => {
     return contract
 }
 
-const createMarketPlaceContract = () => {
+
+const createMarketContract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum)
     const signer = provider.getSigner()
     const contract = new ethers.Contract(marketPlaceAddress, marketPlaceABI, signer)
     return contract
 }
-
-
 
 export const getMyBalance = createAsyncThunk(
     'wallet/getBalance', 
@@ -47,16 +45,22 @@ export const getMyBalance = createAsyncThunk(
 )
 
 export const getMyTransaction = createAsyncThunk(
-    'wallet/getMyTransaction', 
+    'wallet/getMyTransactions', 
     async (_, {rejectWithValue, dispatch}) => {
+        console.log('hi')
         try{
             dispatch(setLoadingState(true))
-            const accountAddress = await getUserAddress()
-            const contract = createMarketPlaceContract()
-            const response = await contract.getTransactionsOfUser(accountAddress)
-            const data = response.map(item => {
-                return item.toString();
-            })
+            const contract = createMarketContract()
+            const response = await contract.getMyTransactions()
+            const data = response.map(item =>(
+                {
+                    fromAddress : item.fromAddress.toString(),
+                    toAddress : item.toAddress.toString(),
+                    date: new Date(item.date.toNumber()).toLocaleString(), 
+                    token: item.token,
+                    productId: item.productId,
+                }
+            ))
             dispatch(setLoadingState(false))
             return data
         }catch(error){

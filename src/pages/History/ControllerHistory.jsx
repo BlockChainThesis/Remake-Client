@@ -4,23 +4,32 @@ import { useDispatch, useSelector } from "react-redux"
 import { getStationHistory } from "../../redux/Station/Slice"
 import ReactPaginate from "react-paginate"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Link } from "react-router-dom"
 import Window from "../../components/Interface/Window/Window"
-const StationHistory = () => {
-    const dispatch = useDispatch()
-    const stationData = useSelector(state => state.station.stationHistory)
+const ControllerHistory = () => {
 
-    useEffect(() => {
-        dispatch(getStationHistory())
-    },[dispatch])
-    
-    if (!stationData) return;
-    
+    const DummyControllerData = [
+        {
+            controllerId: "Nutritious Liquid 1",
+            createAt: "2024-04-12T04:10:03.000Z",
+            status: true,
+        },
+        {
+            controllerId: "Region Irrigation 1",
+            createAt: "2024-04-11T04:12:03.000Z",
+            status: true,
+        },
+        {
+            controllerId: "Region Irrigation 3",
+            createAt: "2024-04-13T04:11:03.000Z",
+            status: false,
+        }
+    ]
+
     const RenderItem = ({currrentItems}) => {
         return(
             <div className='flex flex-col gap-1.5'>
             {currrentItems && currrentItems.map((item, index) => 
-                <StationItem key={index} station={item} />
+                <ControllerItem key={index} controller={item} />
             )}
         </div>)
     }
@@ -38,7 +47,7 @@ const StationHistory = () => {
     
       
         return (
-            <div className='flex flex-col justify-between'>
+            <div className='flex flex-col h-full justify-between'>
                 <RenderItem currrentItems={currentItems}/>
                 <ReactPaginate
                     className='mt-6
@@ -80,27 +89,21 @@ const StationHistory = () => {
     }
     
 
-    const StationItem = ({station}) => {
+    const ControllerItem = ({controller}) => {
         return (
             <li  className='bg-main-100 p-2 cursor-pointer
             w-full py-1 rounded border-b font-mono text-base flex justify-between items-center'>
-                <div className='flex flex-col w-full '>
-                    <div className="flex w-full items-center justify-between font-bold text-main-400">
+                <div className='flex items-center w-full '>
+                    <div className="flex flex-col w-full  font-bold text-main-400">
                         <p>
-                            {station.stationId}
+                            {controller.controllerId}
                         </p>
                         <p className="text-xs italic text-main-200 font-light">
-                            {formattedDate(new Date (station.createAt))}
+                            {formattedDate(new Date (controller.createAt))}
                         </p>
                     </div>
-                    <div className="flex w-full justify-between text-xs italic text-main-300">
-                        <p>
-                            {station.longitude}:
-                            {station.latitude}
-                        </p>
-                        <Link className="underline hover:text-main-200"  to={`/menu/station/${station.stationId}`}>
-                            View more at Station 
-                        </Link>
+                    <div className="text-2xl">
+                        {controller.status ? <FontAwesomeIcon icon="fa-solid fa-toggle-on" className="text-green-400"/> : <FontAwesomeIcon icon="fa-solid fa-toggle-off" className="text-red-400"/>} 
                     </div>
                 </div>
             </li>
@@ -111,9 +114,9 @@ const StationHistory = () => {
 
     return ( 
         <div className="flex flex-col h-fit w-full">
-            <Window label="Station history">
+            <Window label="Controller history">
                 <div className='flex-nowrap flex flex-col gap-3 m-3 h-auto '>
-                    <PaginatedItems itemsPerPage={8} items={stationData}/>
+                <PaginatedItems itemsPerPage={8} items={DummyControllerData}/>
                 </div>
             </Window>
         </div>
@@ -121,4 +124,4 @@ const StationHistory = () => {
 }
 
 
-export default StationHistory
+export default ControllerHistory

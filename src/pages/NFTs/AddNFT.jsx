@@ -47,11 +47,11 @@ const AddNFT = () => {
 
                     <button className="hover:text-main-400 hover:bg-main-100
                     mt-2 self-end font-bold text-main-100 bg-main-400 rounded-lg w-fit px-4 py-1" type="submit">
-                        Create URL
+                        Create URI
                     </button>
                     <div className="">
                         <div className="relative">
-                            <label className="font-bold text-main-100 uppercase">NFT URL</label>
+                            <label className="font-bold text-main-100 uppercase">NFT URI</label>
                             <textarea value={`https://black-flying-guanaco-398.mypinata.cloud/ipfs/${NFTurl && NFTurl}`}
                             className="focus:outline-none text-sm font-semibold
                             w-full rounded p-2 bg-main-100 text-main-400"/>

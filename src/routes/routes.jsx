@@ -21,6 +21,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import UserMenu from "../pages/UserMenu/UserMenu";
+import ControllerHistory from "../pages/History/ControllerHistory";
 
 const publicRoutes = [
     {path: '/', component: Home},
@@ -38,7 +39,7 @@ const privateRoutes = [
     {path: '/NFT/:cropID', component: AddNFT},
     {path: '/menu/form', component: Form},
     {path: '/menu/history/select', component: Select},
-    {path: '/menu/history/:deviceType', component: History},
+    {path: '/menu/history/controller', component: ControllerHistory},
     {path: '/menu/history/station', component: StationHistory},
     {path: '/menu/station', component: StationList},
     {path: '/menu/station/:stationId', component: Station},

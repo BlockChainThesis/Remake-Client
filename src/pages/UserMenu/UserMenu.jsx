@@ -29,7 +29,7 @@ const UserMenu = () => {
             bg-transparent
             p-4 rounded-3xl
             absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            grid grid-cols-4 gap-2
+            grid grid-cols-1 gap-2
             w-full h-full ">
                 {
                     menuItems.map((item, index) => {

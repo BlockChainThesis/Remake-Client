@@ -3,8 +3,9 @@ import { sensorStyleKit } from '../Sensors/Sensor'
 
 const ChartPortal = ({stationType, data}) => {
     if (!data || !stationType) return
+
     const chartData = {
-        labels: [0, 10, 15, 20],
+        labels : data.map(item => new Date(item.timestamp).toLocaleString()),
         datasets: [
             {
                 label: 'Sensor Data',
@@ -35,7 +36,7 @@ const ChartPortal = ({stationType, data}) => {
                         size: 12,
                         weight: 700,
                     },
-                    color: '#285430',
+                    color: '#EDF1D6',
                 },
                 ticks:{
                     display:false,
@@ -45,6 +46,9 @@ const ChartPortal = ({stationType, data}) => {
                 }
             },
             x: {
+                time: {
+                    unit: 'second'
+                },
                 title: {
                     display: true,
                     text: 'TIMESTAMP',
@@ -52,7 +56,7 @@ const ChartPortal = ({stationType, data}) => {
                         size: 12,
                         weight: 700,
                     },
-                    color: '#285430',
+                    color: '#EDF1D6',
                 },
                 ticks:{
                     display:false,

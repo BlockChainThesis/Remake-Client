@@ -5,7 +5,7 @@
 
 .item > input:focus ~ label,
 .item > input:valid ~ label {
-    @apply tablet:text-lg tablet:-translate-x-2 tablet:-translate-y-8 desktop:text-2xl desktop:-translate-x-2 desktop:-translate-y-10 text-primary-50 opacity-100 py-0 px-2 text-sm bg-transparent transform -translate-x-2 -translate-y-5;
+    @apply tablet:text-lg tablet:-translate-x-2 tablet:-translate-y-8 desktop:text-2xl desktop:-translate-x-2 desktop:-translate-y-10 text-main-100 opacity-100 py-0 px-2 text-sm bg-transparent transform -translate-x-2 -translate-y-5;
 }
 
 input[type='date']:required:invalid::-webkit-datetime-edit {

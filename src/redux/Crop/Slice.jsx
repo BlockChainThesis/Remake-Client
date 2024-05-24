@@ -117,6 +117,7 @@ export const addCropToBlockChain = createAsyncThunk(
     async (_,{getState, dispatch}) => {
         try {
             if (ethereum) {
+                dispatch(setLoadingState(true))
                 const state = getState()
                 const cropInfoContract = createContract()
 
@@ -155,14 +156,11 @@ export const addCropToBlockChain = createAsyncThunk(
                     additionalInfo,
                     noOfCrops
                 )
-                dispatch(setLoadingState(true))
                 await cropHash.wait()
                 dispatch(setLoadingState(false))
 
                 window.alert('Add the crop information successfully :)')
-
-                const cropsCount = await cropInfoContract.getNumberOfCrop().toString()
-                return cropsCount
+                return
 
             } else {
                 console.log('No ethereum object')
@@ -239,11 +237,11 @@ export const Slice = createSlice({
                 state.error = action.error.message
 
             })
-            .addCase(initCrop.fulfilled, (state, action) => {
-                state.cropsCount = action.payload
+            .addCase(initCrop.fulfilled, () => {
+                console.log('Init Crop successfully !')
             })
-            .addCase(addCropToBlockChain.fulfilled, (state, action) => {
-                state.cropsCount = action.payload
+            .addCase(addCropToBlockChain.fulfilled, () => {
+                console.log('Added Crop successfully !')
             })
     },
 })

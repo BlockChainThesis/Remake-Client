@@ -24,7 +24,8 @@ export default {
         'clicked': '#D6D6E7 0 3px 7px inset',
         'clicked-menu': '#40513B 0 3px 7px inset',
         'select' : 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-        'crop-display' : '#1d371f 0px 1px 4px, #458446 0px 0px 0px 3px'
+        'crop-display' : '#1d371f 0px 1px 4px, #458446 0px 0px 0px 3px',
+        window: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
       },
       colors: {
         main: {
@@ -45,6 +46,10 @@ export default {
           '800': '#224324',
           '900': '#1d371f',
           '950': '#0f1f11',
+        },
+        sensor: {
+          air: '#EEEEEE',
+          soil :'rgb(198, 169, 105)'
         }
       },
       animation:{

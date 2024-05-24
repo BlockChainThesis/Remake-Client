@@ -4,16 +4,12 @@ import { setLoadingState } from '../../redux/Loading/Slice';
 import { useEffect } from 'react';
 import NavArrow from '../../components/UI/Navigate Arrow/NavArrow';
 
-
 const Home = () => {
     const dispatch = useDispatch();
-
-
     useEffect(() => {
         dispatch(setLoadingState(true))
     },[dispatch])
     
-
     return (
         <div className='
         bg-transparent w-full flex flex-col overflow-visible'>
@@ -39,12 +35,6 @@ const Home = () => {
                             name='connect'
                             to='/auth'
                             className='right-6 flex-row'
-                        />
-                        <NavArrow 
-                                direction='bottom'
-                                name='creator'
-                                to='/'
-                                className='bottom-6 flex-col'
                         />
                     </div>
                 </div>

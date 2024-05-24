@@ -4,6 +4,7 @@ import { fetchStationData, getNumberofStations} from '../../redux/Station/Slice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import FarmerIcon from '../../assets/Station/farmerIcon.png'
+import Window from '../../components/Interface/Window/Window'
 
 const StationList = () => {
     const stationData = useSelector(state => state.station.stationData)
@@ -22,26 +23,23 @@ const StationList = () => {
                 <div className='flex w-fit'>
                     <img src={FarmerIcon} className='max-w-12 tablet:max-w-16'/>
                     <p className='top-0 bg-primary-400 rounded-t-lg rounded-br-lg w-fit p-2 h-fit
-                    italic text-sm text-main-100'
+                     text-sm text-main-100'
                     > <span className='text-lg font-bold font-mono '>{stationCount}</span> stations are presently in operation.</p>
                 </div>
-                <div className='border-2 border-main-300 rounded bg-main-300'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        STATION LIST
-                    </div>
+                <Window label='Station List '>
                     <div className='h-full flex flex-col gap-3 px-3 py-4'>
                         {                        
                             stationData.map((station,index) => (
                                 <Link to={`${station.stationId}`} className='shadow-lg
                                 group hover:bg-main-400
-                                rounded px-3 py-2 font-mono flex bg-main-100 w-full items-center gap-3' key={index}>
+                                rounded p-2 font-mono flex bg-main-100 w-full items-center gap-2' key={index}>
                                     <FontAwesomeIcon 
                                     className='group-hover:text-white
                                     text-2xl text-main-300'
                                     icon="fa-solid fa-tower-broadcast" />
                                     <div className='group-hover:text-white
-                                    font-semibold text-main-300 flex-1'>
-                                        Station Name: {station.stationId} 
+                                    font-semibold text-main-300 flex-1 text-lg tracking-wide'>
+                                        {station.stationId} 
                                         <div className='
                                         group-hover:text-primary-300
                                         flex font-thin gap-2 text-neutral-400 text-xs italic'>
@@ -60,9 +58,8 @@ const StationList = () => {
                                 </Link>
                             ))
                         }
-                        </div>
-                </div>
-
+                    </div>
+                </Window>
             </div>
         </>
     )

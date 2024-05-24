@@ -1,7 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link } from "react-router-dom"
-import MenuGraphics from '../../assets/Menu/Menu.png'
-import MediaQuery from "react-responsive"
 
 const Menu = () => {
     const menuItems = [

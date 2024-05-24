@@ -4,7 +4,10 @@ import {useNavigate, useLocation} from 'react-router-dom'
 const Header = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    
+    const isMenu = location.pathname === '/menu'
     const isHome = location.pathname === '/'
+    
 
 
     const BackButton = () => (
@@ -22,7 +25,7 @@ const Header = () => {
             flex justify-between items-center
             bg-transparent text-black text-3xl           
         '>  
-            {!isHome ? <BackButton className='bottom-6 flex-row-reverse' direction="left" name="Back" to={-1}/> : <div></div>}
+            {!isHome && !isMenu ? <BackButton className='bottom-6 flex-row-reverse' direction="left" name="Back" to={-1}/> : <div></div>}
 
             <button className='flex hover:cursor-pointer'>
                 <FontAwesomeIcon icon="fa-solid fa-bars" className='text-primary-500'/>
