@@ -1,25 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Window from '../../components/Interface/Window/Window';
+import { useDispatch, useSelector } from 'react-redux';
+import { getHistoryController } from '../../redux/Controller/Slice';
 const ControllerHistory = () => {
-  const DummyControllerData = [
-    {
-      controllerId: 'Nutritious Liquid 1',
-      createAt: '2024-04-12T04:10:03.000Z',
-      status: true,
-    },
-    {
-      controllerId: 'Region Irrigation 1',
-      createAt: '2024-04-11T04:12:03.000Z',
-      status: true,
-    },
-    {
-      controllerId: 'Region Irrigation 3',
-      createAt: '2024-04-13T04:11:03.000Z',
-      status: false,
-    },
-  ];
+  const dispatch = useDispatch();
+  const { controllerHistory } = useSelector((state) => state.controller);
+
+  useEffect(() => {
+    dispatch(getHistoryController());
+  }, [dispatch]);
+
+  if (!controllerHistory) return <div>Loading...</div>;
 
   const RenderItem = ({ currrentItems }) => {
     return (
@@ -44,8 +37,7 @@ const ControllerHistory = () => {
       <div className="flex flex-col h-full justify-between">
         <RenderItem currrentItems={currentItems} />
         <ReactPaginate
-          className="mt-6
-                    flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
+          className="mt-6 flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
           pageClassName="px-2 rounded-full"
           activeClassName="bg-main-100 text-main-300"
           breakLabel="..."
@@ -65,18 +57,6 @@ const ControllerHistory = () => {
     );
   };
 
-  const formattedDate = (date) => {
-    return date.toLocaleString('en-US', {
-      year: 'numeric', // 4-digit year
-      month: '2-digit', // 2-digit month
-      day: '2-digit', // 2-digit day
-      hour: '2-digit', // 2-digit hour
-      minute: '2-digit', // 2-digit minutes
-      second: '2-digit', // 2-digit seconds
-      hour12: false, // 24-hour time without AM/PM
-    });
-  };
-
   const ControllerItem = ({ controller }) => {
     return (
       <li
@@ -86,10 +66,10 @@ const ControllerHistory = () => {
         <div className="flex items-center w-full ">
           <div className="flex flex-col w-full  font-bold text-main-400">
             <p>{controller.controllerId}</p>
-            <p className="text-xs italic text-main-200 font-light">{formattedDate(new Date(controller.createAt))}</p>
+            <p className="text-xs italic text-main-200 font-light">{controller.createAt}</p>
           </div>
           <div className="text-2xl">
-            {controller.status ? (
+            {controller.controllerValue === '1' ? (
               <FontAwesomeIcon icon="fa-solid fa-toggle-on" className="text-green-400" />
             ) : (
               <FontAwesomeIcon icon="fa-solid fa-toggle-off" className="text-red-400" />
@@ -104,7 +84,7 @@ const ControllerHistory = () => {
     <div className="flex flex-col h-fit w-full">
       <Window label="Controller history">
         <div className="flex-nowrap flex flex-col gap-3 m-3 h-auto ">
-          <PaginatedItems itemsPerPage={8} items={DummyControllerData} />
+          <PaginatedItems itemsPerPage={8} items={controllerHistory} />
         </div>
       </Window>
     </div>

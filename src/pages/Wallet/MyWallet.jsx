@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getMyBalance, getMyTransaction } from '../../redux/Wallet/Slice';
-import { getUserAddress, isMyAddress } from '../../utils/func';
+import { isMyAddress } from '../../utils/func';
 import Window from '../../components/Interface/Window/Window';
 
 const MyWallet = () => {
@@ -14,7 +14,6 @@ const MyWallet = () => {
     dispatch(getMyTransaction());
   }, [dispatch]);
 
-  const currentAddress = getUserAddress();
   return (
     <>
       <div className="w-full h-full flex flex-col gap-4">

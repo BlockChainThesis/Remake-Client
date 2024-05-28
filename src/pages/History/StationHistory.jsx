@@ -38,8 +38,7 @@ const StationHistory = () => {
       <div className="flex flex-col justify-between">
         <RenderItem currrentItems={currentItems} />
         <ReactPaginate
-          className="mt-6
-                    flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
+          className="mt-6 flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
           pageClassName="px-2 rounded-full"
           activeClassName="bg-main-100 text-main-300"
           breakLabel="..."
@@ -59,28 +58,13 @@ const StationHistory = () => {
     );
   };
 
-  const formattedDate = (date) => {
-    return date.toLocaleString('en-US', {
-      year: 'numeric', // 4-digit year
-      month: '2-digit', // 2-digit month
-      day: '2-digit', // 2-digit day
-      hour: '2-digit', // 2-digit hour
-      minute: '2-digit', // 2-digit minutes
-      second: '2-digit', // 2-digit seconds
-      hour12: false, // 24-hour time without AM/PM
-    });
-  };
-
   const StationItem = ({ station }) => {
     return (
-      <li
-        className="bg-main-100 p-2 cursor-pointer
-            w-full py-1 rounded border-b font-mono text-base flex justify-between items-center"
-      >
+      <li className="bg-main-100 p-2 cursor-pointer w-full py-1 rounded border-b font-mono text-base flex justify-between items-center">
         <div className="flex flex-col w-full ">
           <div className="flex w-full items-center justify-between font-bold text-main-400">
             <p>{station.stationId}</p>
-            <p className="text-xs italic text-main-200 font-light">{formattedDate(new Date(station.createAt))}</p>
+            <p className="text-xs italic text-main-200 font-light">{station.createAt}</p>
           </div>
           <div className="flex w-full justify-between text-xs italic text-main-300">
             <p>

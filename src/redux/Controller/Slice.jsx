@@ -7,10 +7,30 @@ const { ethereum } = window;
 
 const createControllerContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner(); //comment this
+  const signer = provider.getSigner();
   const controllerContract = new ethers.Contract(controllerAddress, controllerABI, signer); //change signer to wallet
   return controllerContract;
 };
+
+export const getHistoryController = createAsyncThunk('controller/getHistoryController', async (_, { dispatch }) => {
+  try {
+    if (ethereum) {
+      dispatch(setLoadingState(true));
+      const contract = createControllerContract();
+      const rawData = await contract.getHistoryController(100);
+      const structuredData = rawData.map((data) => ({
+        controllerId: data.controllerId,
+        controllerValue: data.controllerValue,
+        createAt: new Date(data.createAt.toNumber() * 1000).toLocaleString(),
+        stationId: data.stationId,
+      }));
+      dispatch(setLoadingState(false));
+      return structuredData;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const getAllController = createAsyncThunk('controller/getAllController', async (_, { dispatch }) => {
   try {
@@ -20,7 +40,7 @@ export const getAllController = createAsyncThunk('controller/getAllController', 
       const rawData = await contract.getAllController();
       const structuredData = rawData.map((controller) => ({
         controllerId: controller.controllerId,
-        createAt: new Date(controller.createAt.toNumber()).toLocaleString(),
+        createAt: new Date(controller.createAt.toNumber() * 1000).toLocaleString(),
         stationId: controller.stationId,
         value: parseInt(controller.controllerValue),
       }));
@@ -173,6 +193,7 @@ export const Slice = createSlice({
     },
     pumpState: [],
     valveState: [],
+    controllerHistory: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -205,6 +226,9 @@ export const Slice = createSlice({
           state.valveState.push(action.payload);
         }
         state.loading = false;
+      })
+      .addCase(getHistoryController.fulfilled, (state, action) => {
+        state.controllerHistory = action.payload;
       });
   },
 });

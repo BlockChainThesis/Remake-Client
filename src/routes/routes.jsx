@@ -13,16 +13,15 @@ import Product from '../pages/Market/Product';
 import MyWallet from '../pages/Wallet/MyWallet';
 import AddNFT from '../pages/NFTs/AddNFT';
 import Inventory from '../pages/Inventory/Inventory';
+import UserMenu from '../pages/Menu/UserMenu';
+import ControllerHistory from '../pages/History/ControllerHistory';
 
 //Library
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import UserMenu from '../pages/UserMenu/UserMenu';
-import ControllerHistory from '../pages/History/ControllerHistory';
 import { authorization, roleCheck } from '../redux/Auth/Slice';
 import { useEffect, useState } from 'react';
-
 import { clearAccount, setAccount } from '../redux/Auth/Slice';
 
 const publicRoutes = [

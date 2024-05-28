@@ -29,7 +29,6 @@ const createMarketContract = () => {
 export const getMyBalance = createAsyncThunk('wallet/getBalance', async (_, { rejectWithValue, dispatch }) => {
   try {
     dispatch(setLoadingState(true));
-
     const contract = createContract();
     const rawData = await contract.getBalance();
     dispatch(setLoadingState(false));
@@ -42,7 +41,6 @@ export const getMyBalance = createAsyncThunk('wallet/getBalance', async (_, { re
 export const getMyTransaction = createAsyncThunk(
   'wallet/getMyTransactions',
   async (_, { rejectWithValue, dispatch }) => {
-    console.log('hi');
     try {
       dispatch(setLoadingState(true));
       const contract = createMarketContract();
@@ -50,7 +48,7 @@ export const getMyTransaction = createAsyncThunk(
       const data = response.map((item) => ({
         fromAddress: item.fromAddress.toString(),
         toAddress: item.toAddress.toString(),
-        date: new Date(item.date.toNumber()).toLocaleString(),
+        date: new Date(item.date.toNumber() * 1000).toLocaleString(),
         token: item.token,
         productId: item.productId,
       }));
@@ -67,13 +65,11 @@ export const approveAllMyBalance = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       dispatch(setLoadingState(true));
-
       const contract = createContract();
       const response = await contract.approveAllMyBalance(marketPlaceAddress);
       await response.wait();
-      console.log('Approve successfully');
       dispatch(setLoadingState(false));
-      // return rawData
+      console.log('Approve successfully');
     } catch (error) {
       return rejectWithValue(error);
     }

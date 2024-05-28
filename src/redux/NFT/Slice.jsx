@@ -119,7 +119,7 @@ export const getMyListedNFTInfo = createAsyncThunk(
         onMarket: curr.currentlyListed,
         crop: {
           cropType: curr.crop.cropType,
-          plantingDate: new Date(curr.crop.plantingDate).toLocaleString(),
+          plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
           harvestDate: parseInt(curr.crop.monthsToHavest),
           fertilizers: curr.crop.fertilizers.join(', ') || '',
           pesticides: curr.crop.pesticides.join(', ') || '',
@@ -154,7 +154,7 @@ export const getMyUnlistedNFTInfo = createAsyncThunk(
         onMarket: curr.currentlyListed,
         crop: {
           cropType: curr.crop.cropType,
-          plantingDate: new Date(curr.crop.plantingDate).toLocaleString(),
+          plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
           harvestDate: parseInt(curr.crop.monthsToHavest),
           fertilizers: curr.crop.fertilizers.join(', ') || '',
           pesticides: curr.crop.pesticides.join(', ') || '',

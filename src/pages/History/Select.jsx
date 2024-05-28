@@ -16,28 +16,14 @@ const Select = () => {
                     group hover:bg-primary-300 shadow-select
                     p-5 h-full w-full bg-primary-400 flex items-center justify-between rounded-xl"
         >
-          <p
-            className="
-                        group-hover:text-main-300 
-                        text-xl self-start font-bold text-main-100"
-          >
-            Station
-          </p>
+          <p className="group-hover:text-main-300 text-xl self-start font-bold text-main-100">Station</p>
           <img src={Sensor} className=" group-hover:opacity-50 max-w-[100px]" />
         </Link>
         <Link
           to={'/menu/history/controller'}
-          className="
-                    group hover:bg-primary-300 shadow-select pot
-                    p-5 h-full w-full bg-primary-400 flex items-center justify-between rounded-xl"
+          className="group hover:bg-primary-300 shadow-select p-5 h-full w-full bg-primary-400 flex items-center justify-between rounded-xl"
         >
-          <p
-            className="
-                        group-hover:text-main-300 
-                        text-xl self-start font-bold text-main-100"
-          >
-            Controller
-          </p>
+          <p className="group-hover:text-main-300text-xl self-start font-bold text-main-100">Controller</p>
           <img src={Controller} className=" group-hover:opacity-50 max-w-[100px]" />
         </Link>
       </div>

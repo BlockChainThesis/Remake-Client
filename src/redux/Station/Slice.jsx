@@ -49,20 +49,20 @@ export const getStationData = createAsyncThunk('station/getStationData', async (
     if (ethereum) {
       dispatch(setLoadingState(true));
       const contract = createContract();
-      const availableStationData = await contract.getStationData(stationId);
-      const structuredStationData = {
-        stationId: availableStationData[0],
-        createAt: new Date(parseInt(availableStationData[1]) * 1000).toISOString(),
-        longitude: parseFloat(availableStationData[2]),
-        latitude: parseFloat(availableStationData[3]),
-        sensorData: availableStationData[4].map((sensor) => ({
+      const rawData = await contract.getStationData(stationId);
+      const structuredData = {
+        stationId: rawData[0],
+        createAt: new Date(parseInt(rawData[1]) * 1000).toISOString(),
+        longitude: parseFloat(rawData[2]),
+        latitude: parseFloat(rawData[3]),
+        sensorData: rawData[4].map((sensor) => ({
           sensorId: sensor.sensorId,
           sensorUnit: sensor.sensorUnit,
           sensorValue: sensor.sensorValue,
         })),
       };
       dispatch(setLoadingState(false));
-      return structuredStationData;
+      return structuredData;
     }
   } catch (error) {
     console.log(error);
@@ -105,7 +105,7 @@ export const getStationHistory = createAsyncThunk(
         const stationData = await contract.getAllStationData();
         const structuredData = stationData.map((station) => ({
           stationId: station.stationId,
-          createAt: new Date(parseInt(station.createAt) * 1000).toISOString(),
+          createAt: new Date(parseInt(station.createAt) * 1000).toLocaleString(),
           longitude: parseFloat(station.gps_latitude),
           latitude: parseFloat(station.gps_longitude),
           sensorData: station.sensorData.map((sensor) => ({
@@ -114,7 +114,6 @@ export const getStationHistory = createAsyncThunk(
             sensorValue: sensor.sensorValue,
           })),
         }));
-        console.log(structuredData);
         dispatch(setLoadingState(false));
         return structuredData;
       } else {

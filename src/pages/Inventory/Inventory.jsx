@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getMyListedNFTInfo, getMyUnlistedNFTInfo } from '../../redux/NFT/Slice';
-import { fetchCropData } from '../../redux/Crop/Slice';
+import { getAllCropsInfo } from '../../redux/Crop/Slice';
 
 import { urlDN } from '../../constant';
 
@@ -18,7 +18,7 @@ const Inventory = () => {
   useEffect(() => {
     dispatch(getMyListedNFTInfo());
     dispatch(getMyUnlistedNFTInfo());
-    dispatch(fetchCropData());
+    dispatch(getAllCropsInfo());
   }, [dispatch]);
 
   const [filters, setFilters] = useState({

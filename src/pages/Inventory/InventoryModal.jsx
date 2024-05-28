@@ -140,13 +140,8 @@ const InventoryModal = ({ type, data, setModalState }) => {
               {/* <div className="flex w-full items-center gap-5 justify-center">
                                 <img className="p-1 rounded border border-main-100 w-[200px] h-[200px] object-cover" src={urlDN + data.uri}/>
                             </div> */}
-              <div className="flex text-xl font-bold text-main-100 w-full justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Link to={`${data.cropId}`}>
-                    <FontAwesomeIcon icon="fa-solid fa-circle-info" className="text-2xl" />
-                  </Link>
-                  Crop no.
-                </div>
+              <div className="flex text-xl font-bold text-main-100 w-full justify-between">
+                Crop no.
                 <h1>{data.cropId}</h1>
               </div>
               <FontAwesomeIcon
