@@ -1,16 +1,15 @@
-.item{
-    @apply relative flex flex-col gap-1.5 font-mono;
+.item {
+  @apply relative flex flex-col gap-1.5 font-mono;
 }
-
 
 .item > input:focus ~ label,
 .item > input:valid ~ label {
-    @apply tablet:text-lg tablet:-translate-x-2 tablet:-translate-y-8 desktop:text-2xl desktop:-translate-x-2 desktop:-translate-y-10 text-main-100 opacity-100 py-0 px-2 text-sm bg-transparent transform -translate-x-2 -translate-y-5;
+  @apply tablet:text-lg tablet:-translate-x-2 tablet:-translate-y-8 desktop:text-2xl desktop:-translate-x-2 desktop:-translate-y-10 text-main-100 opacity-100 py-0 px-2 text-sm bg-transparent transform -translate-x-2 -translate-y-5;
 }
 
 input[type='date']:required:invalid::-webkit-datetime-edit {
-    color: transparent;
+  color: transparent;
 }
 input[type='date']:focus::-webkit-datetime-edit {
-    color: #7a9d54 !important;
+  color: #7a9d54 !important;
 }

@@ -1,15 +1,14 @@
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom';
 
 const NFTs = () => {
-    return (
-        <>
-            <div>
-            <Link/>
-                This is NFT places 
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <div>
+        <Link />
+        This is NFT places
+      </div>
+    </>
+  );
+};
 
-
-export default NFTs 
+export default NFTs;

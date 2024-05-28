@@ -1,13 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
-
-#root{
+#root {
   @apply bg-main-100;
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto
+  font-family: 'Open Sans', sans-serif;
+  font-optical-sizing: auto;
 }
 
-#loader{
+#loader {
   @apply z-50 flex justify-center items-center fixed top-0 left-0 w-full h-full bg-primary-50/50;
 }
-
