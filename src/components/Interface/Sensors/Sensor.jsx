@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSensorActiveID } from '../../../redux/Dashboard/Dashboard';
 import { getSensorHistory } from '../../../redux/Station/Slice';
+import { setSensorActiveID } from '../../../redux/Interface/Slice';
 
 const sensorType = {
   air: {
@@ -35,21 +35,11 @@ const sensorStyleKit = (station, type, active = -1) => {
       return stationType === 'air' ? 'fa-wind' : stationType === 'water' ? 'fa-water' : 'fa-seedling';
     case 'background':
       // return active ? "bg-neutral-400" : 'bg-white';
-      return active
-        ? stationType === 'air'
-          ? 'bg-neutral-400'
-          : stationType === 'water'
-            ? 'bg-blue-300'
-            : 'bg-sensor-soil'
-        : 'bg-main-400';
+      return active ? (stationType === 'air' ? 'bg-neutral-400' : stationType === 'water' ? 'bg-blue-300' : 'bg-sensor-soil') : 'bg-main-400';
     case 'text':
       return active ? 'text-white' : 'text-main-100';
     case 'chart-background':
-      return stationType === 'air'
-        ? 'rgb(238, 238, 238, 0.5)'
-        : stationType === 'water'
-          ? 'rgb(147, 197, 253, 0.6)'
-          : 'rgb(198, 169, 105, 0.6)';
+      return stationType === 'air' ? 'rgb(238, 238, 238, 0.5)' : stationType === 'water' ? 'rgb(147, 197, 253, 0.6)' : 'rgb(198, 169, 105, 0.6)';
     case 'chart-border':
       return stationType === 'air' ? '#EEEEEE' : stationType === 'water' ? 'rgb(147, 197, 253)' : 'rgb(198, 169, 105)';
     default:
@@ -58,8 +48,7 @@ const sensorStyleKit = (station, type, active = -1) => {
 
 const Sensor = ({ station, id, unit, value }) => {
   const dispatch = useDispatch();
-  //UI element active or not
-  const activeID = useSelector((state) => state.dashboard.sensorActiveID);
+  const activeID = useSelector((state) => state.interface.sensorActiveID);
   const [sensorActive, setSensorActive] = useState(false);
   useEffect(() => {
     setSensorActive(activeID === id);
@@ -72,28 +61,14 @@ const Sensor = ({ station, id, unit, value }) => {
     <>
       <div
         onClick={onClickHandler}
-        className={`flex gap-4 w-full h-full bg-blue
+        className={`bg-blue flex h-full w-full gap-4
             ${sensorStyleKit(station, 'background', sensorActive)}
             items-center rounded px-3 py-2`}
       >
-        <FontAwesomeIcon
-          icon={`fa-solid ${sensorStyleKit(station, 'icon')}`}
-          className={`laptop:text-9xl
-                    text-4xl ${sensorStyleKit(station, 'text', sensorActive)}`}
-        />
-        <div className="h-full flex flex-col justify-center">
-          <p
-            className={`laptop:text-5xl
-                        font-bold w-full text-lg uppercase
-                            ${sensorStyleKit(station, 'text', sensorActive)}
-                        `}
-          >
-            {stationTypeSet(id)}
-          </p>
-          <p
-            className={`laptop:text-5xl font-bold text-lg 
-                            ${sensorStyleKit(station, 'text', sensorActive)}`}
-          >
+        <FontAwesomeIcon icon={`fa-solid ${sensorStyleKit(station, 'icon')}`} className={`text-4xl laptop:text-9xl ${sensorStyleKit(station, 'text', sensorActive)}`} />
+        <div className="flex h-full flex-col justify-center">
+          <p className={`w-full text-lg font-bold uppercase laptop:text-5xl ${sensorStyleKit(station, 'text', sensorActive)}`}>{stationTypeSet(id)}</p>
+          <p className={`text-lg font-bold laptop:text-5xl ${sensorStyleKit(station, 'text', sensorActive)}`}>
             {value}
             <span>{unit}</span>
           </p>

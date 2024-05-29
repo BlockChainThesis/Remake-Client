@@ -1,12 +1,12 @@
-import Header from '../Header/Header';
+import Header from './Header/Header';
 import { motion } from 'framer-motion';
-import Loader from '../Loader/Loader';
+import Loader from './Loader/Loader';
 
 const Layout = ({ children }) => {
   return (
     <motion.div
       id="mainLayout"
-      className="flex flex-col min-h-dvh overflow-hidden"
+      className="flex min-h-dvh flex-col overflow-hidden"
       transition={{
         duration: 1,
       }}
@@ -25,8 +25,8 @@ const Layout = ({ children }) => {
       <Loader />
       <div
         className="
-            laptop:max-w-4xl laptop:mx-auto relative
-            px-4 flex-1 flex items-stretch w-full h-full pb-10"
+            relative flex h-full
+            w-full flex-1 items-stretch px-4 pb-10 laptop:mx-auto laptop:max-w-4xl"
       >
         {children}
       </div>

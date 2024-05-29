@@ -1,36 +1,66 @@
-import Input from '../../components/UI/Input/Input';
+import Input from '../../UI/Input/Input';
 
-import { useDispatch } from 'react-redux';
-import { addCropToBlockChain, initCrop, setFormData } from '../../redux/Crop/Slice';
-import Window from '../../components/Interface/Layout/Window/Window';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCropInfo, updateCropInfo } from '../../../redux/Crop/Slice';
+import Window from '../Layout/Window/Window';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { formatDate } from '../../../utils/func';
 
-const Form = () => {
+const Crop = () => {
+  const { cropId } = useParams();
+  const { data: singleCropData } = useSelector((state) => state.crop.singleCrop);
+
   const dispatch = useDispatch();
+
+  const [cropInfo, setCropInfo] = useState({
+    cropType: '',
+    plantingDate: '',
+    harvestDate: 0,
+    fertilizers: '',
+    pesticides: '',
+    diseases: '',
+    additionalInfo: '',
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(setFormData({ name: name, value: value }));
+    setCropInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = () => {
-    console.log('Submitting...');
-    dispatch(addCropToBlockChain());
+    dispatch(updateCropInfo({ cropId, updateData: cropInfo }));
   };
+
+  useEffect(() => {
+    dispatch(getCropInfo(cropId));
+  }, [dispatch, cropId]);
+
+  useEffect(() => {
+    if (singleCropData)
+      setCropInfo({
+        cropType: singleCropData.cropType,
+        plantingDate: singleCropData.plantingDate && formatDate(singleCropData.plantingDate),
+        harvestDate: singleCropData.harvestDate,
+        fertilizers: singleCropData.fertilizers,
+        pesticides: singleCropData.pesticides,
+        diseases: singleCropData.diseases,
+        additionalInfo: singleCropData.additionalInfo,
+      });
+  }, [singleCropData]);
 
   return (
     <div className="flex h-fit w-full flex-col gap-4">
-      <Window label="Form">
+      <Window label={`Update Crop ID:${cropId}`}>
         <div className="flex h-auto flex-col gap-6 p-4">
-          <p className="w-full text-main-100/90">
-            Enter your Crop Information or
-            <span onClick={() => dispatch(initCrop())} className="ml-1 cursor-pointer text-main-100 underline hover:text-main-400">
-              init it here
-            </span>
-          </p>
-          <form className="grid grid-cols-4 gap-x-2 gap-y-5 ">
-            <div className="col-span-3">
+          <form className="mt-6 grid grid-cols-4 gap-x-2 gap-y-5">
+            <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.cropType || ''}
                 required={true}
                 name="cropType"
                 type="text"
@@ -38,19 +68,10 @@ const Form = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="col-span-1">
-              <Input
-                // className="col-span-2"
-                required={true}
-                name="noOfCrops"
-                type="number"
-                label="No."
-                onChange={handleChange}
-              />
-            </div>
             <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.plantingDate}
                 required={true}
                 name="plantingDate"
                 type="date"
@@ -61,6 +82,7 @@ const Form = () => {
             <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.harvestDate || ''}
                 required={true}
                 name="harvestDate"
                 type="number"
@@ -71,6 +93,7 @@ const Form = () => {
             <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.fertilizers || ''}
                 required={true}
                 name="fertilizers"
                 type="text"
@@ -81,6 +104,7 @@ const Form = () => {
             <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.pesticides || ''}
                 required={true}
                 name="pesticides"
                 type="text"
@@ -91,6 +115,7 @@ const Form = () => {
             <div className="col-span-4">
               <Input
                 // className="col-span-2"
+                value={cropInfo.diseases || ''}
                 required={true}
                 name="diseases"
                 type="text"
@@ -99,14 +124,7 @@ const Form = () => {
               />
             </div>
             <div className="col-span-4">
-              <Input
-                // className="col-span-2"
-                required={true}
-                name="additionalInfo"
-                type="text"
-                label="Additional Information"
-                onChange={handleChange}
-              />
+              <Input value={cropInfo.additionalInfo || ''} required={true} name="additionalInfo" type="text" label="Additional Information" onChange={handleChange} />
             </div>
           </form>
           <button
@@ -118,7 +136,7 @@ const Form = () => {
                     hover:text-main-100 focus:outline-none
                     "
           >
-            Publish
+            Update
           </button>
         </div>
       </Window>
@@ -126,4 +144,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default Crop;

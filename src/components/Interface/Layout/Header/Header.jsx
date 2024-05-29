@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { clearAccount } from '../../../redux/Auth/Slice';
+import { clearAccount } from '../../../../redux/Auth/Slice';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,20 +22,22 @@ const Header = () => {
     <header
       className="
             tablet: mx-auto
-            desktop:max-w-4xl 
-            w-screen px-4 py-2.5
-            flex justify-between items-center
-            bg-transparent text-black text-3xl           
+            flex 
+            w-screen items-center justify-between
+            bg-transparent px-4 py-2.5
+            text-3xl text-black desktop:max-w-4xl           
         "
     >
-      {!isHome && !isMenu ? (
-        <BackButton className="bottom-6 flex-row-reverse" direction="left" name="Back" to={-1} />
-      ) : (
-        <div></div>
-      )}
+      {!isHome && !isMenu ? <BackButton className="bottom-6 flex-row-reverse" direction="left" name="Back" to={-1} /> : <div></div>}
       {!isHome && !isAuth && (
-        <button className="flex hover:cursor-pointer" onClick={() => dispatch(clearAccount())}>
-          <FontAwesomeIcon icon="fa-solid fa-right-from-bracket" className="text-main-300" />
+        <button
+          className="flex hover:cursor-pointer"
+          onClick={() => {
+            dispatch(clearAccount());
+            navigate('/');
+          }}
+        >
+          <FontAwesomeIcon icon="fa-solid fa-right-from-bracket" className="text-2xl text-main-300" />
         </button>
       )}
     </header>

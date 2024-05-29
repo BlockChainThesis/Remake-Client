@@ -1,6 +1,6 @@
 import { default as ReactSwitch } from 'react-switch';
 
-const Switch = ({ onChange, checked, isEnabled }) => {
+const Switch = ({ onChange, checked = false, isEnabled }) => {
   return (
     <ReactSwitch
       onChange={onChange}

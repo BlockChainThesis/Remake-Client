@@ -2,8 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { buyNFT, checkOwner, getListedNFT, unlistNFT } from '../../redux/Market/Slice';
-import Window from '../../components/Interface/Window/Window';
+import { buyNFT, checkOwner, getListedNFT, resetBuyStatus, unlistNFT } from '../../redux/Market/Slice';
+import Window from '../../components/Interface/Layout/Window/Window';
 
 const Product = () => {
   const urlDN = 'https://black-flying-guanaco-398.mypinata.cloud/ipfs/';
@@ -12,7 +12,7 @@ const Product = () => {
   const dispatch = useDispatch();
   const { isOwner } = useSelector((state) => state.market);
   const { data } = useSelector((state) => state.market.product);
-  const { status } = useSelector((state) => state.market.buyNFT);
+  const { status } = useSelector((state) => state.market.buy);
 
   const navigate = useNavigate();
 
@@ -22,7 +22,8 @@ const Product = () => {
   }, [productId, dispatch]);
 
   useEffect(() => {
-    if (status === 'completed') navigate('/menu/');
+    if (status === 'completed') navigate('/menu');
+    dispatch(resetBuyStatus());
   }, [status, navigate]);
 
   const handleWithDraw = () => {
@@ -36,15 +37,15 @@ const Product = () => {
   };
   return (
     <>
-      <div className="w-full h-full flex flex-col gap-4 ">
+      <div className="flex h-full w-full flex-col gap-4 ">
         <Window label="Author">
-          <div className="flex flex-col p-4 font-mono w-full overflow-x-scroll no-scrollbar">
+          <div className="no-scrollbar flex w-full flex-col overflow-x-scroll p-4 font-mono">
             <div className="">
-              <p className=" text-main-100 font-semibold p-0">Owner</p>
+              <p className=" p-0 font-semibold text-main-100">Owner</p>
               <p className="text-primary-100">{data.owner}</p>
             </div>
             <div className="">
-              <p className=" text-main-100 font-semibold">Seller</p>
+              <p className=" font-semibold text-main-100">Seller</p>
               <p className="text-primary-100">{data.owner}</p>
             </div>
           </div>
@@ -52,56 +53,53 @@ const Product = () => {
 
         <Window
           label={
-            <div className="justify-between flex items-center">
+            <div className="flex items-center justify-between">
               CROP
               <div className="text-sm">{data.cropInfo.plantingDate}</div>
             </div>
           }
         >
-          <div className="flex flex-col w-full justify-center p-4">
-            <img
-              src={urlDN + data.uri}
-              className="m-2 border-2 border-main-100 p-0.5 self-center rounded-lg w-[250px] h-[250px] object-cover"
-            />
+          <div className="flex w-full flex-col justify-center p-4">
+            <img src={urlDN + data.uri} className="m-2 h-[250px] w-[250px] self-center rounded-lg border-2 border-main-100 object-scale-down p-0.5" />
           </div>
         </Window>
 
         <Window label="Price">
           <div className="p-4">
-            <div className="font-mono font-bold text-main-100 text-5xl flex gap-2">
+            <div className="flex gap-2 font-mono text-5xl font-bold text-main-100">
               {data.price}
               <div className="">FLP</div>
             </div>
 
             {isOwner ? (
-              <div className="flex flex-col gap-2 w-full font-semibold text-main-100">
+              <div className="flex w-full flex-col gap-2 font-semibold text-main-100">
                 This is your product
                 <button
                   onClick={handleWithDraw}
-                  className="flex items-center justify-between uppercase bg-main-100
-                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                                px-4 py-3 rounded-lg text-left"
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 text-left font-bold
+                                uppercase text-primary-500 hover:bg-main-200 hover:text-main-100"
                 >
                   Withdraw
                   <FontAwesomeIcon icon="fa-solid fa-cart-arrow-down" bounce className="text-2xl" />
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 w-full ">
+              <div className="flex w-full flex-col gap-2 ">
                 <button
                   onClick={handleBuyNFT}
-                  className="flex items-center justify-between uppercase bg-main-100
-                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                                px-4 py-3 rounded-lg"
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 font-bold uppercase
+                                text-primary-500 hover:bg-main-200 hover:text-main-100"
                 >
                   Buy now
                   <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake className="text-2xl" />
                 </button>
 
                 <button
-                  className="flex items-center justify-between uppercase bg-main-100
-                                text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                                px-4 py-3 rounded-lg"
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 font-bold uppercase
+                                text-primary-500 hover:bg-main-200 hover:text-main-100"
                 >
                   Make Offer
                   <FontAwesomeIcon icon="fa-solid fa-tag" spin className="text-2xl" />
@@ -113,12 +111,12 @@ const Product = () => {
 
         <Window label="Detailed Information">
           <div className="p-4">
-            <ul className="font-mono flex flex-col gap-1">
+            <ul className="flex flex-col gap-1 font-mono">
               {Object.entries(data.cropInfo).map(
                 ([key, value], index) =>
                   key !== 'additionalInfo' && (
                     <li key={index} className="flex gap-3 text-sm">
-                      <p className="uppercase font-semibold text-main-100 ">{key}:</p>
+                      <p className="font-semibold uppercase text-main-100 ">{key}:</p>
 
                       <p className="text-primary-100">{value === '' ? 'None' : value}</p>
                     </li>
@@ -129,9 +127,7 @@ const Product = () => {
         </Window>
 
         <Window label="Description">
-          <div className="px-4 py-2 text-main-100 font-semibold font-mono">
-            {data.cropInfo.additionalInfo === '' ? 'Nothing' : data.cropInfo.additionalInfo}
-          </div>
+          <div className="px-4 py-2 font-mono font-semibold text-main-100">{data.cropInfo.additionalInfo === '' ? 'Nothing' : data.cropInfo.additionalInfo}</div>
         </Window>
       </div>
     </>

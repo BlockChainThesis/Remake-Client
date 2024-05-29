@@ -4,7 +4,7 @@ import { getStationHistory } from '../../redux/Station/Slice';
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import Window from '../../components/Interface/Window/Window';
+import Window from '../../components/Interface/Layout/Window/Window';
 const StationHistory = () => {
   const dispatch = useDispatch();
   const stationData = useSelector((state) => state.station.stationHistory);
@@ -16,11 +16,7 @@ const StationHistory = () => {
   if (!stationData) return;
 
   const RenderItem = ({ currrentItems }) => {
-    return (
-      <div className="flex flex-col gap-1.5">
-        {currrentItems && currrentItems.map((item, index) => <StationItem key={index} station={item} />)}
-      </div>
-    );
+    return <div className="flex flex-col gap-1.5">{currrentItems && currrentItems.map((item, index) => <StationItem key={index} station={item} />)}</div>;
   };
 
   const PaginatedItems = ({ itemsPerPage, items }) => {
@@ -38,7 +34,7 @@ const StationHistory = () => {
       <div className="flex flex-col justify-between">
         <RenderItem currrentItems={currentItems} />
         <ReactPaginate
-          className="mt-6 flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
+          className="mt-6 flex gap-2 self-center rounded-sm px-2 py-1 font-mono font-semibold text-main-100"
           pageClassName="px-2 rounded-full"
           activeClassName="bg-main-100 text-main-300"
           breakLabel="..."
@@ -60,11 +56,11 @@ const StationHistory = () => {
 
   const StationItem = ({ station }) => {
     return (
-      <li className="bg-main-100 p-2 cursor-pointer w-full py-1 rounded border-b font-mono text-base flex justify-between items-center">
-        <div className="flex flex-col w-full ">
+      <li className="flex w-full cursor-pointer items-center justify-between rounded border-b bg-main-100 p-2 py-1 font-mono text-base">
+        <div className="flex w-full flex-col ">
           <div className="flex w-full items-center justify-between font-bold text-main-400">
             <p>{station.stationId}</p>
-            <p className="text-xs italic text-main-200 font-light">{station.createAt}</p>
+            <p className="text-xs font-light italic text-main-200">{station.createAt}</p>
           </div>
           <div className="flex w-full justify-between text-xs italic text-main-300">
             <p>
@@ -80,9 +76,9 @@ const StationHistory = () => {
   };
 
   return (
-    <div className="flex flex-col h-fit w-full">
+    <div className="flex h-fit w-full flex-col">
       <Window label="Station history">
-        <div className="flex-nowrap flex flex-col gap-3 m-3 h-auto ">
+        <div className="m-3 flex h-auto flex-col flex-nowrap gap-3 ">
           <PaginatedItems itemsPerPage={8} items={stationData} />
         </div>
       </Window>

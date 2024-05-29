@@ -2,19 +2,18 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethers } from 'ethers';
 import { cropNFTABI, cropNFTAddress } from '../../constant';
 import { marketPlaceABI, marketPlaceAddress } from '../../constant';
-
-import { setLoadingState } from '../Loading/Slice';
+import { setLoadingState } from '../Interface/Slice';
 import axios from 'axios';
 
 const name = 'cropNFT';
 const initialState = {
-  error: null,
-  loading: false,
-  NFTs: [],
-  NFTurl: '',
+  NFTuri: '',
   isNFT: null,
   listedNFT: [],
   unListedNFT: [],
+  crtNFT: {
+    status: '',
+  },
 };
 
 const { ethereum } = window;
@@ -32,71 +31,69 @@ const createMarketContract = () => {
   return contract;
 };
 
-export const approveNFT = createAsyncThunk('cropNFT/approveNFT', async (tokenId, { dispatch, rejectWithValue }) => {
+// Aprove NFT
+export const approveNFT = createAsyncThunk('cropNFT/approveNFT', async (tokenId, { dispatch }) => {
   try {
-    if (ethereum) {
-      dispatch(setLoadingState(true));
-      const cropNFTContract = createContract();
-      const response = await cropNFTContract.approveNFT(marketPlaceAddress, tokenId);
-      await response.wait();
-      console.log('Approve successfully');
-      dispatch(setLoadingState(false));
-      return;
-    }
+    dispatch(setLoadingState(true));
+    const cropNFTContract = createContract();
+    const response = await cropNFTContract.approveNFT(marketPlaceAddress, tokenId);
+    await response.wait();
+    console.log('Approve successfully');
+    dispatch(setLoadingState(false));
+    return;
   } catch (error) {
-    return rejectWithValue(error);
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
 });
 
-export const createNFT = createAsyncThunk(
-  'cropNFT/createNFT',
-  async ({ NFTurl, cropID }, { rejectWithValue, dispatch }) => {
-    try {
-      dispatch(setLoadingState(true));
-
-      const contract = createContract();
-      const response = await contract.createCropNFT(NFTurl, cropID);
-      await response.wait();
-      dispatch(setLoadingState(false));
-      return;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+//Create NFT with Id and URI
+export const createNFT = createAsyncThunk('cropNFT/createNFT', async ({ NFTuri, cropID }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const contract = createContract();
+    const response = await contract.createCropNFT(NFTuri, cropID);
+    await response.wait();
+    dispatch(setLoadingState(false));
+    return;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
 
-export const createURL = createAsyncThunk(
-  'cropNFT/createURL',
-  async ({ cropID, image }, { rejectWithValue, dispatch }) => {
-    const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
-    let data = new FormData();
-    data.append('file', image);
+//Create Pinata URI with image
+export const createURI = createAsyncThunk('cropNFT/createURL', async ({ cropID, image }, { dispatch }) => {
+  const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
+  let data = new FormData();
+  data.append('file', image);
 
-    // Set the metadata if needed
-    const metadata = JSON.stringify({
-      name: cropID,
+  // Set the metadata if needed
+  const metadata = JSON.stringify({
+    name: cropID,
+  });
+  data.append('pinataMetadata', metadata);
+
+  try {
+    dispatch(setLoadingState(true));
+    const response = await axios.post(url, data, {
+      maxContentLength: 'Infinity', // needed to prevent axios from erroring out with large files
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        pinata_api_key: import.meta.env.VITE_API,
+        pinata_secret_api_key: import.meta.env.VITE_SECRET,
+      },
     });
-    data.append('pinataMetadata', metadata);
-
-    try {
-      dispatch(setLoadingState(true));
-      const response = await axios.post(url, data, {
-        maxContentLength: 'Infinity', // needed to prevent axios from erroring out with large files
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          pinata_api_key: import.meta.env.VITE_API,
-          pinata_secret_api_key: import.meta.env.VITE_SECRET,
-        },
-      });
-      dispatch(setLoadingState(false));
-      return response.data.IpfsHash;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+    dispatch(setLoadingState(false));
+    return response.data.IpfsHash;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
 
-export const checkNFT = createAsyncThunk('cropNFT/checkNFT', async (cropID, { rejectWithValue, dispatch }) => {
+//Check if crop is NFT
+export const checkNFT = createAsyncThunk('cropNFT/checkNFT', async (cropID, { dispatch }) => {
   try {
     dispatch(setLoadingState(true));
     const contract = createContract();
@@ -104,138 +101,105 @@ export const checkNFT = createAsyncThunk('cropNFT/checkNFT', async (cropID, { re
     dispatch(setLoadingState(false));
     return response;
   } catch (error) {
-    return rejectWithValue(error);
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
 });
 
-export const getMyListedNFTInfo = createAsyncThunk(
-  'cropNFT/getMyListedNFTInfo',
-  async (_, { rejectWithValue, dispatch }) => {
-    try {
-      dispatch(setLoadingState(true));
-      const contract = createMarketContract();
-      const response = await contract.getMyListedNFTInfo();
-      const listedNFT = response.map((curr) => ({
-        onMarket: curr.currentlyListed,
-        crop: {
-          cropType: curr.crop.cropType,
-          plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
-          harvestDate: parseInt(curr.crop.monthsToHavest),
-          fertilizers: curr.crop.fertilizers.join(', ') || '',
-          pesticides: curr.crop.pesticides.join(', ') || '',
-          diseases: curr.crop.diseases.join(', ') || '',
-          additionalInfo: curr.crop.additionalInfo,
-          actualHarvestDate: curr.crop.harvestDate,
-        },
-        price: curr.price,
-        owner: curr.owner,
-        seller: curr.seller,
-        tokenId: curr.tokenId,
-        uri: curr.uri,
-      }));
-      dispatch(setLoadingState(false));
-      console.log(listedNFT);
-
-      return listedNFT;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+export const getMyListedNFTInfo = createAsyncThunk('cropNFT/getMyListedNFTInfo', async (_, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const contract = createMarketContract();
+    const response = await contract.getMyListedNFTInfo();
+    const listedNFT = response.map((curr) => ({
+      onMarket: curr.currentlyListed,
+      crop: {
+        cropType: curr.crop.cropType,
+        plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
+        harvestDate: parseInt(curr.crop.monthsToHavest),
+        fertilizers: curr.crop.fertilizers.join(', ') || '',
+        pesticides: curr.crop.pesticides.join(', ') || '',
+        diseases: curr.crop.diseases.join(', ') || '',
+        additionalInfo: curr.crop.additionalInfo,
+        actualHarvestDate: curr.crop.harvestDate,
+      },
+      price: curr.price,
+      owner: curr.owner,
+      seller: curr.seller,
+      tokenId: curr.tokenId,
+      uri: curr.uri,
+    }));
+    dispatch(setLoadingState(false));
+    return listedNFT;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
 
-export const getMyUnlistedNFTInfo = createAsyncThunk(
-  'cropNFT/getMyUnlistedNFTInfo',
-  async (_, { rejectWithValue, dispatch }) => {
-    try {
-      dispatch(setLoadingState(true));
-      const contract = createMarketContract();
-      const response = await contract.getMyUnlistedNFTInfo();
-      const unlistedNFT = response.map((curr) => ({
-        onMarket: curr.currentlyListed,
-        crop: {
-          cropType: curr.crop.cropType,
-          plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
-          harvestDate: parseInt(curr.crop.monthsToHavest),
-          fertilizers: curr.crop.fertilizers.join(', ') || '',
-          pesticides: curr.crop.pesticides.join(', ') || '',
-          diseases: curr.crop.diseases.join(', ') || '',
-          additionalInfo: curr.crop.additionalInfo,
-          actualHarvestDate: curr.crop.harvestDate,
-        },
-        price: curr.price,
-        owner: curr.owner,
-        seller: curr.seller,
-        tokenId: curr.tokenId,
-        uri: curr.uri,
-      }));
-      dispatch(setLoadingState(false));
-      return unlistedNFT;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+export const getMyUnlistedNFTInfo = createAsyncThunk('cropNFT/getMyUnlistedNFTInfo', async (_, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const contract = createMarketContract();
+    const response = await contract.getMyUnlistedNFTInfo();
+    const unlistedNFT = response.map((curr) => ({
+      onMarket: curr.currentlyListed,
+      crop: {
+        cropType: curr.crop.cropType,
+        plantingDate: new Date(parseInt(curr.crop.plantingDate) * 1000).toLocaleString(),
+        harvestDate: parseInt(curr.crop.monthsToHavest),
+        fertilizers: curr.crop.fertilizers.join(', ') || '',
+        pesticides: curr.crop.pesticides.join(', ') || '',
+        diseases: curr.crop.diseases.join(', ') || '',
+        additionalInfo: curr.crop.additionalInfo,
+        actualHarvestDate: curr.crop.harvestDate,
+      },
+      price: curr.price,
+      owner: curr.owner,
+      seller: curr.seller,
+      tokenId: curr.tokenId,
+      uri: curr.uri,
+    }));
+    dispatch(setLoadingState(false));
+    return unlistedNFT;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
+
 export const Slice = createSlice({
   name: name,
   initialState,
-  reducers: {},
+  reducers: {
+    resetURI: (state) => {
+      state.NFTuri = '';
+    },
+    resetCrtStatus: (state) => {
+      state.crtNFT.status = '';
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createURL.fulfilled, (state, action) => {
-        state.loading = false;
-        state.NFTurl = action.payload;
-        alert('Create URL successfully!');
-      })
-      .addCase(createURL.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createURL.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.NFTurl = null;
+      .addCase(createURI.fulfilled, (state, action) => {
+        state.NFTuri = action.payload;
+        alert('Create URI successfully!');
       })
       .addCase(createNFT.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(createNFT.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createNFT.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.crtNFT.status = 'completed';
+        alert('Create NFT successfully !');
       })
       .addCase(checkNFT.fulfilled, (state, action) => {
-        state.loading = false;
         state.isNFT = action.payload;
       })
-      .addCase(checkNFT.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(checkNFT.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.isNFT = null;
-      })
       .addCase(getMyListedNFTInfo.fulfilled, (state, action) => {
-        state.loading = false;
         state.listedNFT = action.payload;
       })
-      .addCase(getMyListedNFTInfo.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getMyListedNFTInfo.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.listedNFT = null;
-      })
       .addCase(getMyUnlistedNFTInfo.fulfilled, (state, action) => {
-        state.loading = false;
         state.unListedNFT = action.payload;
-      })
-      .addCase(getMyUnlistedNFTInfo.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getMyUnlistedNFTInfo.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.unListedNFT = null;
       });
   },
 });
 
+export const { resetURI, resetCrtStatus } = Slice.actions;
 export default Slice.reducer;

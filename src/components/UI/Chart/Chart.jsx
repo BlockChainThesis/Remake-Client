@@ -1,16 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { forwardRef } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { sensorStyleKit } from '../../Interface/Sensors/Sensor';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
@@ -96,9 +86,7 @@ const Chart = ({ stationType, data }) => {
 
   return (
     <>
-      <p className={`font-bold text-lg uppercase ${sensorStyleKit(stationType, 'text', 0)}`}>
-        {stationType} sensor history
-      </p>
+      <p className={`text-lg font-bold uppercase ${sensorStyleKit(stationType, 'text', 0)}`}>{stationType} sensor history</p>
       <CustomChart data={chartData} options={chartOptions} />
     </>
   );

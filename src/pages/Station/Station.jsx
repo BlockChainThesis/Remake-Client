@@ -2,18 +2,18 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getStationData } from '../../redux/Station/Slice';
+import { setSensorActiveID } from '../../redux/Interface/Slice';
 import Chart from '../../components/UI/Chart/Chart';
 import SensorList from '../../components/Interface/Sensors/SensorList';
-import { setSensorActiveID } from '../../redux/Dashboard/Dashboard';
 import Controller from '../../components/Interface/Controller/Controller';
-import Window from '../../components/Interface/Window/Window';
+import Window from '../../components/Interface/Layout/Window/Window';
 const Station = () => {
   const params = useParams();
   const stationId = params.stationId;
   const dispatch = useDispatch();
 
   const currentStation = useSelector((state) => state.station.currentStation);
-  const activeSensor = useSelector((state) => state.dashboard.sensorActiveID);
+  const activeSensor = useSelector((state) => state.interface.sensorActiveID);
   const currentSensorHistory = useSelector((state) => state.station.currentSensorHistory);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ const Station = () => {
   if (!currentStation || !stationId) return;
   return (
     <div className="w-full">
-      <div className="laptop:max-w-4xl desktop:mx-auto flex flex-col gap-4">
+      <div className="flex flex-col gap-4 laptop:max-w-4xl desktop:mx-auto">
         <Window label="Chart">
-          <div className="rounded-lg p-4 flex flex-col justify-center relative w-full h-full">
+          <div className="relative flex h-full w-full flex-col justify-center rounded-lg p-4">
             {activeSensor !== -1 ? (
               <Chart stationType={stationId} data={currentSensorHistory} />
             ) : (

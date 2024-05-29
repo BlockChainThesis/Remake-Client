@@ -36,8 +36,8 @@ const NavArrow = ({ direction = 'top', name = 'underfined', to = '/', className 
       }}
       onClick={() => navigate(to)}
       className={`
-                flex z-50
-                absolute items-center
+                absolute z-50
+                flex items-center
                 justify-center
                 bg-transparent 
                 text-primary-400
@@ -46,7 +46,7 @@ const NavArrow = ({ direction = 'top', name = 'underfined', to = '/', className 
                 cursor-pointer  
                 `}
     >
-      <p className="font-bold text-lg uppercase">{name}</p>
+      <p className="text-lg font-bold uppercase">{name}</p>
       <button>
         <FontAwesomeIcon icon={icon} className="text-4xl" />
       </button>

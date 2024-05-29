@@ -25,23 +25,23 @@ const UserMenu = () => {
 
   return (
     <>
-      <nav className="bg-transparent p-4 rounded-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid grid-cols-1 gap-2 w-full h-full ">
+      <nav className="absolute left-1/2 top-1/2 grid h-full w-full -translate-x-1/2 -translate-y-1/2 grid-cols-1 gap-2 rounded-3xl bg-transparent p-4 ">
         {menuItems.map((item, index) => {
           return (
             <Link
               className={`
-                            desktop:text-3xl
-                            bg-primary-400 p-2 rounded-[8px]
-                            flex flex-col gap-2 justify-center items-center 
-                            text-white
-                            hover:-translate-y-2  hover:shadow-2
-                            active:shadow-clicked-menu active:translate-y-0
+                            flex
+                            flex-col items-center justify-center
+                            gap-2 rounded-[8px] bg-primary-400 p-2 text-white 
+                            hover:-translate-y-2
+                            hover:shadow-2  active:translate-y-0
+                            active:shadow-clicked-menu desktop:text-3xl
                             ${item.className}`}
               to={item.path}
               key={index}
             >
               <FontAwesomeIcon className="text-6xl" icon={item.icon} />
-              <p className="font-mono font-bold text-md">{item.name}</p>
+              <p className="text-md font-mono font-bold">{item.name}</p>
             </Link>
           );
         })}

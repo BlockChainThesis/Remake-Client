@@ -1,7 +1,7 @@
-import Spline from '@splinetool/react-spline';
 import { useDispatch } from 'react-redux';
-import { setLoadingState } from '../../redux/Loading/Slice';
 import { useEffect } from 'react';
+import { setLoadingState } from '../../redux/Interface/Slice';
+import Spline from '@splinetool/react-spline';
 import NavArrow from '../../components/UI/Navigate Arrow/NavArrow';
 
 const Home = () => {
@@ -13,21 +13,21 @@ const Home = () => {
   return (
     <div
       className="
-        bg-transparent w-full flex flex-col overflow-visible"
+        flex w-full flex-col overflow-visible bg-transparent"
     >
       <p
         className="
-                    laptop:text-4xl py-2 text-left w-full absolute z-30
-                    bg-gradient-to-r from-primary-300 to-primary-600 bg-clip-text
-                    font-bold font-mono
-                    text-primary-400 text-2xl text-transparent leading-normal 
+                    absolute z-30 w-full bg-gradient-to-r from-primary-300 to-primary-600
+                    bg-clip-text py-2 text-left font-mono
+                    text-2xl font-bold
+                    leading-normal text-primary-400 text-transparent laptop:text-4xl 
                     "
       >
         Revolutionizing Agriculture with Blockchain Technology
       </p>
 
       <div className="flex h-full overflow-visible">
-        <div className="grow  flex flex-col justify-center items-center w-full">
+        <div className="flex  w-full grow flex-col items-center justify-center">
           <Spline
             style={{
               position: 'absolute',

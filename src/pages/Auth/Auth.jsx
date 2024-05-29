@@ -8,10 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
-  // const isConnected = useSelector((state) => state.login.isConnected);
-  const user = useSelector((state) => state.auth.user);
-  const isAdmin = useSelector((state) => state.auth.isAdmin);
-
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const loginMethod = [
     {
@@ -37,7 +34,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) navigate('/menu');
-  }, [user, navigate, isAdmin]);
+  }, [user, navigate]);
 
   return (
     <>
@@ -57,46 +54,18 @@ const Login = () => {
           x: '-50%',
           opacity: 1,
         }}
-        className=" 
-                p-4 w-full max-w-[66%]
-                shadow-1 shadow-primary-400
-                rounded-lg
-                bg-transparent"
+        className="w-full max-w-[66%] rounded-lg bg-transparent p-4 shadow-1 shadow-primary-400"
       >
-        <p
-          className="  
-                        text-3xl font-sans font-semibold
-                        text-primary-400 
-                        absolute -top-6
-                        bg-main-100
-                    "
-        >
-          Connect
-        </p>
-
-        <ul className="flex flex-col gap-3.5 m-2">
+        <p className="absolute -top-6 bg-main-100 font-sans text-3xl font-semibold text-primary-400">Connect</p>
+        <ul className="m-2 flex flex-col gap-3.5">
           {loginMethod.map((method, index) => {
             return (
-              <li
-                key={index}
-                className="
-                                    flex w-full
-                                    font-mono uppercase text-lg
-                                    "
-              >
+              <li key={index} className="flex w-full font-mono text-lg uppercase">
                 <a
                   onClick={() => method.login()}
-                  className={`
-                                        w-full flex gap-3 items-center justify-center
-                                        p-2 tracking-wider
-                                        cursor-pointer
-                                        rounded-lg
-                                        hover:-translate-y-1
-                                        hover:shadow-2
-                                        active:shadow-clicked
-                                        active:translate-y-0
-                                        transform duration-100
-                                        border border-main-400
+                  className={`flex w-full transform cursor-pointer items-center justify-center gap-3 rounded-lg border border-main-400
+                                        p-2 tracking-wider duration-100 hover:-translate-y-1 hover:shadow-2
+                                        active:translate-y-0 active:shadow-clicked
                                         ${method.color} ${method.text}`}
                 >
                   {method.icon}

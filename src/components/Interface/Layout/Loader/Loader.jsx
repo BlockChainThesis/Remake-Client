@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 const loaderContainer = document.getElementById('loaderContainer');
 
 const Loader = () => {
-  const isLoading = useSelector((state) => state.loading.isLoading);
+  const isLoading = useSelector((state) => state.interface.isLoading);
   if (!isLoading) {
     return <></>;
   }
@@ -12,8 +12,8 @@ const Loader = () => {
     <div id="loader">
       <div
         className="
-            border-primary-100 h-20 w-20 
-            animate-spin rounded-full border-8 border-t-primary-400"
+            h-20 w-20 animate-spin 
+            rounded-full border-8 border-primary-100 border-t-primary-400"
       />
     </div>,
     loaderContainer

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { marketPlaceAddress, marketPlaceABI, tokenABI, tokenAddress } from '../../constant';
 import { ethers } from 'ethers';
-import { setLoadingState } from '../Loading/Slice';
+import { setLoadingState } from '../Interface/Slice';
 
 const name = 'wallet';
 const initialState = {
@@ -26,7 +26,7 @@ const createMarketContract = () => {
   return contract;
 };
 
-export const getMyBalance = createAsyncThunk('wallet/getBalance', async (_, { rejectWithValue, dispatch }) => {
+export const getMyBalance = createAsyncThunk('wallet/getBalance', async (_, { dispatch }) => {
   try {
     dispatch(setLoadingState(true));
     const contract = createContract();
@@ -34,14 +34,14 @@ export const getMyBalance = createAsyncThunk('wallet/getBalance', async (_, { re
     dispatch(setLoadingState(false));
     return rawData.toString();
   } catch (error) {
-    return rejectWithValue(error);
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
 });
 
-export const getMyTransaction = createAsyncThunk(
-  'wallet/getMyTransactions',
-  async (_, { rejectWithValue, dispatch }) => {
-    try {
+export const getMyTransaction = createAsyncThunk('wallet/getMyTransactions', async (_, { dispatch }) => {
+  try {
+    if (ethereum) {
       dispatch(setLoadingState(true));
       const contract = createMarketContract();
       const response = await contract.getMyTransactions();
@@ -54,27 +54,26 @@ export const getMyTransaction = createAsyncThunk(
       }));
       dispatch(setLoadingState(false));
       return data;
-    } catch (error) {
-      return rejectWithValue(error);
     }
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
 
-export const approveAllMyBalance = createAsyncThunk(
-  'wallet/approveAllMyBalance',
-  async (_, { rejectWithValue, dispatch }) => {
-    try {
-      dispatch(setLoadingState(true));
-      const contract = createContract();
-      const response = await contract.approveAllMyBalance(marketPlaceAddress);
-      await response.wait();
-      dispatch(setLoadingState(false));
-      console.log('Approve successfully');
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+export const approveAllMyBalance = createAsyncThunk('wallet/approveAllMyBalance', async (_, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const contract = createContract();
+    const response = await contract.approveAllMyBalance(marketPlaceAddress);
+    await response.wait();
+    dispatch(setLoadingState(false));
+    console.log('Approve successfully');
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
   }
-);
+});
 
 export const Slice = createSlice({
   name: name,
@@ -83,26 +82,10 @@ export const Slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getMyBalance.fulfilled, (state, action) => {
-        state.loading = false;
         state.balance = action.payload;
       })
-      .addCase(getMyBalance.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getMyBalance.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.balance = null;
-      })
       .addCase(getMyTransaction.fulfilled, (state, action) => {
-        state.loading = false;
         state.transaction = action.payload;
-      })
-      .addCase(getMyTransaction.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getMyTransaction.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.transaction = null;
       });
   },
 });

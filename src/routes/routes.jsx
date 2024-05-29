@@ -20,9 +20,9 @@ import ControllerHistory from '../pages/History/ControllerHistory';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { authorization, roleCheck } from '../redux/Auth/Slice';
 import { useEffect, useState } from 'react';
-import { clearAccount, setAccount } from '../redux/Auth/Slice';
+import { authorization, clearAccount, setAccount } from '../redux/Auth/Slice';
+import Crop from '../components/Interface/Crop/Crop';
 
 const publicRoutes = [
   { path: '/', component: Home },
@@ -34,6 +34,8 @@ const privateRoutes = [
   { path: '/market', component: Martket },
   { path: '/market/:productId', component: Product },
   { path: '/menu/inventory', component: Inventory },
+  { path: '/menu/inventory/:cropId', component: Crop },
+
   { path: '/NFT/:cropID', component: AddNFT },
   { path: '/menu/form', component: Form },
   { path: '/menu/history/select', component: Select },
@@ -55,33 +57,26 @@ const AnimatedRoutes = ({ children }) => <AnimatePresence mode="wait">{children}
 const MainRoutes = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const user = useSelector((state) => state.auth.user);
-  const isAdmin = useSelector((state) => state.auth.isAdmin);
+  const location = useLocation();
+  const { isLoggedIn, isAdmin } = useSelector((state) => state.auth);
 
   const [mainRoutes, setMainRoutes] = useState([]);
 
-  const location = useLocation();
-
   useEffect(() => {
-    if (isAdmin === true) {
-      setMainRoutes(privateRoutes);
-    } else if (isAdmin === false) {
-      setMainRoutes(userRoutes);
+    if (isLoggedIn) {
+      if (isAdmin) {
+        setMainRoutes(privateRoutes);
+      } else {
+        setMainRoutes(userRoutes);
+      }
     }
-  }, [isAdmin]);
-
-  useEffect(() => {
-    if (user) {
-      dispatch(authorization(user));
-      dispatch(roleCheck());
-    }
-  }, [dispatch, user]);
+  }, [isAdmin, isLoggedIn]);
 
   useEffect(() => {
     const handleAccountsChanged = (accounts) => {
       if (accounts.length > 0) {
         dispatch(setAccount(accounts[0]));
+        dispatch(authorization(accounts[0]));
       } else {
         dispatch(clearAccount());
       }
@@ -97,7 +92,7 @@ const MainRoutes = () => {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
       }
     };
-  }, [dispatch, navigate, user]);
+  }, [dispatch, navigate]);
 
   return (
     <AnimatedRoutes>
@@ -123,7 +118,11 @@ const MainRoutes = () => {
               <Route
                 key={index}
                 path={route.path}
-                element={<Layout>{user ? <Page /> : <Navigate to="/" replace />}</Layout>}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
               />
             );
           })}

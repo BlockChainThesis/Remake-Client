@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Window from '../../components/Interface/Window/Window';
+import Window from '../../components/Interface/Layout/Window/Window';
 import { useDispatch, useSelector } from 'react-redux';
 import { getHistoryController } from '../../redux/Controller/Slice';
 const ControllerHistory = () => {
@@ -15,11 +15,7 @@ const ControllerHistory = () => {
   if (!controllerHistory) return <div>Loading...</div>;
 
   const RenderItem = ({ currrentItems }) => {
-    return (
-      <div className="flex flex-col gap-1.5">
-        {currrentItems && currrentItems.map((item, index) => <ControllerItem key={index} controller={item} />)}
-      </div>
-    );
+    return <div className="flex flex-col gap-1.5">{currrentItems && currrentItems.map((item, index) => <ControllerItem key={index} controller={item} />)}</div>;
   };
 
   const PaginatedItems = ({ itemsPerPage, items }) => {
@@ -34,10 +30,10 @@ const ControllerHistory = () => {
     };
 
     return (
-      <div className="flex flex-col h-full justify-between">
+      <div className="flex h-full flex-col justify-between">
         <RenderItem currrentItems={currentItems} />
         <ReactPaginate
-          className="mt-6 flex self-center gap-2 px-2 py-1 rounded-sm text-main-100 font-mono font-semibold"
+          className="mt-6 flex gap-2 self-center rounded-sm px-2 py-1 font-mono font-semibold text-main-100"
           pageClassName="px-2 rounded-full"
           activeClassName="bg-main-100 text-main-300"
           breakLabel="..."
@@ -60,13 +56,13 @@ const ControllerHistory = () => {
   const ControllerItem = ({ controller }) => {
     return (
       <li
-        className="bg-main-100 p-2 cursor-pointer
-            w-full py-1 rounded border-b font-mono text-base flex justify-between items-center"
+        className="flex w-full cursor-pointer
+            items-center justify-between rounded border-b bg-main-100 p-2 py-1 font-mono text-base"
       >
-        <div className="flex items-center w-full ">
-          <div className="flex flex-col w-full  font-bold text-main-400">
+        <div className="flex w-full items-center ">
+          <div className="flex w-full flex-col  font-bold text-main-400">
             <p>{controller.controllerId}</p>
-            <p className="text-xs italic text-main-200 font-light">{controller.createAt}</p>
+            <p className="text-xs font-light italic text-main-200">{controller.createAt}</p>
           </div>
           <div className="text-2xl">
             {controller.controllerValue === '1' ? (
@@ -81,9 +77,9 @@ const ControllerHistory = () => {
   };
 
   return (
-    <div className="flex flex-col h-fit w-full">
+    <div className="flex h-fit w-full flex-col">
       <Window label="Controller history">
-        <div className="flex-nowrap flex flex-col gap-3 m-3 h-auto ">
+        <div className="m-3 flex h-auto flex-col flex-nowrap gap-3 ">
           <PaginatedItems itemsPerPage={8} items={controllerHistory} />
         </div>
       </Window>
