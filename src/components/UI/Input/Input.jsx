@@ -1,36 +1,24 @@
-import classes from './Input.module.css'
+import classes from './Input.module.css';
 
-
-const Input = ({label, ...attributes}) => (
-    <div className={classes.item}>
-        <input className={`
-            tablet:py-2 
-            tablet:text-lg 
-            tablet:px-4
-
-            desktop:py-4 
-            desktop:text-2xl 
-            desktop:px-5
-            rounded-lg font-mono
-            w-full py-2 px-2.5 text-main-400 leading-tight focus:outline-none`}
-            {...attributes}
-        />
-        <label className="
-            tablet:py-2 
-            tablet:text-lg 
-            tablet:px-4
-            
-            desktop:py-4 
-            desktop:text-2xl 
-            desktop:px-5
-            opacity-70 pointer-events-none
-            transform transition-all duration-100 
-            absolute py-2 px-2.5 font-semibold text-main-300 text-sm
+const Input = ({ label, ...attributes }) => (
+  <div className={classes.item}>
+    <input
+      className={`
+            w-full
+            rounded-lg bg-main-100 px-2.5
+            py-2 font-mono font-semibold leading-tight text-main-400 focus:outline-none`}
+      {...attributes}
+    />
+    <label
+      className="
+            pointer-events-none absolute
+            transform px-2.5 py-2 
+            text-sm font-semibold text-main-300 opacity-70 transition-all duration-100
             "
-        >{label}</label>
-    </div>
+    >
+      {label}
+    </label>
+  </div>
+);
 
-)
-
-
-export default Input
+export default Input;

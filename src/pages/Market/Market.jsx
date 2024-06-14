@@ -1,124 +1,89 @@
-import Profile from '../../assets/Market/market.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllListedNFTs, getHighestPrice, getLowestPrice, getTotalNFTs } from '../../redux/Market/Slice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllListedNFTs, getHighestPrice, getLowestPrice, getTotalNFTs } from '../../redux/Market/Slice';
+import { urlDN } from '../../constant';
 const Martket = () => {
-    const urlDN = 'https://black-flying-guanaco-398.mypinata.cloud/ipfs/'
+  const [searchTerm, setSearchTerm] = useState(''); // Search state
+  const [sortOrder, setSortOrder] = useState(''); // Sort state
+  const { marketData, totalNFTs, highestPrice, lowestPrice } = useSelector((state) => state.market);
+  const dispatch = useDispatch();
 
-    const [searchTerm, setSearchTerm] = useState('')
+  // Load NFT, listedNFT, price (highest & lowest) on component load
+  useEffect(() => {
+    dispatch(getAllListedNFTs());
+    dispatch(getTotalNFTs());
+    dispatch(getHighestPrice());
+    dispatch(getLowestPrice());
+  }, [dispatch]);
 
-    const dispatch = useDispatch()
-    const {marketData, totalNFTs, highestPrice, lowestPrice, loading, error} = useSelector(state => state.market)
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
-    useEffect(() => {
-        dispatch(getAllListedNFTs())
-        dispatch(getTotalNFTs())
-        dispatch(getHighestPrice())
-        dispatch(getLowestPrice())
+  //Filtered Product with sort and search Term
+  const filteredProducts = marketData
+    .filter((product) => product.cropInfo.cropType.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => (sortOrder === 'asc' ? a.price - b.price : sortOrder === 'desc' ? b.price - a.price : 0));
 
-    },[dispatch])
+  const handleSortOrderChange = () => {
+    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+  };
 
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-    
-    const filteredProducts =  marketData.filter(product => product.cropInfo.cropType.toLowerCase().includes(searchTerm.toLowerCase()))
-
-    if(loading || error) return;
-    
-
-    const MarketInfo = ({title, value}) => (
-        <div className='border-r-2 border-main-300 pr-1 w-full'>
-            <p className='text-primary-500'>
-                {title}
-            </p>
-            <p className='text-main-400'>
-                {value}
-            </p>
+  const MarketInfo = ({ title, value }) => (
+    <div className="flex w-full flex-col items-center justify-center rounded bg-main-300 px-1 py-2 text-main-100">
+      <p className="">{title}</p>
+      <p className="text-2xl tracking-wider">{value}</p>
+    </div>
+  );
+  return (
+    <>
+      <div className="flex h-full w-full flex-col gap-3">
+        <div className="flex w-full items-center justify-center gap-3 rounded-lg bg-main-300 p-6 text-main-100">
+          <FontAwesomeIcon className="text-[60px]" icon="fa-solid fa-shop" />
+          <div className="flex flex-col">
+            <p className="-mb-2">Your</p>
+            <h1 className="text-3xl font-semibold tracking-wide ">MarketPlace</h1>
+          </div>
         </div>
-    )
-    console.log(filteredProducts)
 
-    return (
-        <>
-            <div className="w-full h-full flex flex-col p-4 rounded-2xl gap-4
-            bg-transparent
-            border-4 border-main-200">
-                {/* Profile  */}
-                {/* <div className={`${classes.profile} bg-white rounded-lg p-2`}>    */}
-                <div className=' rounded-lg p-2'>   
-                    <div className='flex justify-center w-full'>
-                        <img src={Profile} className='max-w-[380px]'/>    
-                    </div>
-                    <div className='flex flex-col w-full'>
-                        <div>
-                            <h1 className='py-1.5 font-semibold text-3xl tracking-wide text-primary-700'>
-                                Your MarketPlace
-                            </h1>
-                        </div>
-                        <div className='flex gap-4 justify-between
-                        font-mono text-sm font-semibold border-t-2 border-t-main-300 py-1.5'>
-                            <MarketInfo title={'Total Products'} value={totalNFTs}/>
-                            <MarketInfo title={'Highest Price'} value={highestPrice}/>
-                            <MarketInfo title={'Lowest Price'} value={lowestPrice}/>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className='flex self-center gap-2.5 items-center'>
-                    <button className='flex'>
-                        <FontAwesomeIcon icon="fa-solid fa-filter" className='
-                        hover:bg-main-300 hover:text-main-400
-                        text-xl text-main-100 p-1.5 bg-primary-300 rounded'/>
-                    </button>
-                    <div className='relative'>
-                        <input 
-                        type='search'
-                        onChange={handleSearchChange}
-                        className='bg-primary-300 pl-7 pr-1 py-1 rounded text-main-100 focus:outline-none'/>
-                        <FontAwesomeIcon className='text-primary-50 absolute left-2 top-2 pointer-events-none'
-                        icon="fa-solid fa-magnifying-glass" />
-                    </div>
-                    <button className='flex'>
-                        <FontAwesomeIcon icon="fa-solid fa-sort" className='
-                        hover:bg-main-300 hover:text-main-400
-                        text-xl text-main-100 p-1.5 bg-primary-300 rounded'/>
-                    </button>
+        <div className="h-1 w-full rounded bg-main-300"></div>
 
-                </div>
-                
-                <div className='grid grid-cols-2 gap-y-2 gap-x-2'>
-                    {
-                        filteredProducts.map((market,index) => (
-                        <Link to={`${market.tokenId}`} key={index} className='group hover:bg-main-400 cursor-pointer flex flex-col gap-1
-                         bg-primary-300 rounded-lg p-3'>
-                                <img className='w-full h-[150px] object-cover rounded-lg' src={urlDN + market.uri}/>
-                                    <div className='font-sans p-2'>
-                                        <h1 className='font-semibold tracking-wide text-lg text-main-100 uppercase'>
-                                            {market.cropInfo.cropType}
-                                        </h1>
-                                        <div className='group-hover:text-main-100
-                                        flex gap-1.5  font-bold 
-                                        font-mono text-xl tracking-wide text-primary-700'>
-                                            <p className=''>{market.price}</p> 
-                                            <p>FLP</p>
-                                        </div>
-                                        <div className='font-mono text-xs text-primary-50 w-full overflow-scroll'>
-                                            Planting Date: {market.cropInfo.plantingDate}
-                                        </div>
-                                </div>
-                            </Link>
-                        ))
-                    }
-                </div>
+        <div className="flex justify-between gap-2 font-mono text-xs font-semibold ">
+          <MarketInfo title={'Total'} value={totalNFTs} />
+          <MarketInfo title={'Highest Price'} value={highestPrice} />
+          <MarketInfo title={'Lowest Price'} value={lowestPrice} />
+        </div>
+        <div className="flex flex-col gap-4 rounded-lg bg-main-300 p-4">
+          <div className="flex items-center gap-2.5 self-center">
+            <div className="relative">
+              <input type="search" onChange={handleSearchChange} className="rounded bg-main-100 py-1 pl-7 pr-1 font-semibold text-main-300 focus:outline-none" />
+              <FontAwesomeIcon className="pointer-events-none absolute left-2 top-2 text-main-400" icon="fa-solid fa-magnifying-glass" />
             </div>
-        </>
-    )
-}
+            <button className="flex" onClick={handleSortOrderChange}>
+              <FontAwesomeIcon icon="fa-solid fa-sort" className="rounded bg-main-100 p-1.5 text-xl text-main-300 hover:bg-main-100  hover:text-main-400" />
+            </button>
+          </div>
 
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+            {filteredProducts.map((market, index) => (
+              <Link to={`${market.tokenId}`} key={index} className=" group flex cursor-pointer flex-col gap-1 rounded-lg bg-main-100 p-3 hover:bg-main-400">
+                <img className="h-[120px] w-full rounded-lg object-scale-down " src={urlDN + market.uri} />
+                <div className="p-2 font-sans">
+                  <h1 className="text-lg font-semibold uppercase tracking-wide text-main-300">{market.cropInfo.cropType}</h1>
+                  <div className="flex gap-1.5 font-mono text-xl font-bold tracking-wide text-main-400 group-hover:text-main-200">
+                    <p className="">{market.price}</p>
+                    <p>FLP</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
-
-export default Martket
+export default Martket;

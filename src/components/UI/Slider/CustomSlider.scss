@@ -1,19 +1,18 @@
-
-.slick-slider , .slick-track, .slick-list {
-    @apply justify-around;
-    display: flex !important;
-    height: 100%;
-    width: 100%;
-
+.slick-slider,
+.slick-track,
+.slick-list {
+  @apply justify-around;
+  display: flex !important;
+  height: 100%;
+  width: 100%;
 }
 
-.slick-track{
-    @apply justify-around;
-    display: flex !important;
-    gap: 6px;
+.slick-track {
+  @apply justify-around;
+  display: flex !important;
+  gap: 6px;
 }
 .slick-slide {
-    position: relative;
-    width: 100%;
-
+  position: relative;
+  width: 100%;
 }

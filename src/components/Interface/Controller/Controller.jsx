@@ -1,45 +1,30 @@
-import Device from './Device'
-import CustomSlider from '../../UI/Slider/CustomSlider'
-const Controller = ( ) => {
-    const renderDevice = (number) => {
-        const devices = []
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { getAllController } from '../../../redux/Controller/Slice';
+import { useSelector } from 'react-redux';
+import Device from './Device';
 
-        for (let i = 1; i <= number; i++) devices.push(i)
+const Controller = () => {
+  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.controller.controllers);
 
-        return devices.map((item, index) => {
-            return (
-                <Device
-                    key={index}
-                    device={{
-                        name: `Device ${item}`,
-                        index: item,
-                    }}
-                />
-            )
-        })
-    }
-    const settings = {
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        arrows: false,
-        swipe: true,
-        adaptiveHeight: true,
-    }
+  useEffect(() => {
+    dispatch(getAllController());
+  }, [dispatch]);
 
-    return (
-        <>  
-            <div className="w-full h-full absolute 
-            
-            ">
-                <CustomSlider setting={settings}>
-                    {renderDevice(8)}
-                </CustomSlider>
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <div className="m-3 grid grid-cols-2 gap-x-2 gap-y-2">
+        {data ? (
+          data.map((item, index) => {
+            return <Device key={index} data={item} />;
+          })
+        ) : (
+          <p>No controller to render</p>
+        )}
+      </div>
+    </>
+  );
+};
 
-export default Controller
+export default Controller;

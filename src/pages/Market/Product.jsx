@@ -1,140 +1,137 @@
-import { useParams } from 'react-router-dom'
-import CropIMG from '../../assets/Market/crop.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getListedNFT } from '../../redux/Market/Slice'
-
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { buyNFT, checkOwner, getListedNFT, resetBuyStatus, unlistNFT } from '../../redux/Market/Slice';
+import Window from '../../components/Interface/Layout/Window/Window';
 
 const Product = () => {
-    const urlDN = 'https://black-flying-guanaco-398.mypinata.cloud/ipfs/'
+  const urlDN = 'https://black-flying-guanaco-398.mypinata.cloud/ipfs/';
+  const { productId } = useParams();
 
+  const dispatch = useDispatch();
+  const { isOwner } = useSelector((state) => state.market);
+  const { data } = useSelector((state) => state.market.product);
+  const { status } = useSelector((state) => state.market.buy);
 
-    const {productId} = useParams()
-    
-    const dispatch = useDispatch()
-    const {singleMarketData, loading, error} = useSelector(state => state.market)
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        dispatch(getListedNFT(productId))
-    },[productId, dispatch])
+  useEffect(() => {
+    dispatch(getListedNFT(productId));
+    dispatch(checkOwner(productId));
+  }, [productId, dispatch]);
 
-    if(loading || error) return;
+  useEffect(() => {
+    if (status === 'completed') navigate('/menu');
+    dispatch(resetBuyStatus());
+  }, [status, navigate]);
 
-    return (
-        <>
-            <div className="w-full h-full flex flex-col p-4 rounded-2xl gap-4
-            bg-transparent border-4 border-main-200">
-                <div className='text-3xl font-semibold text-primary-500 uppercase'>
-                    {singleMarketData.cropInfo.cropType}
-                        <div className='font-mono text-base'>
-                            Owned by <span className='text-primary-400'>{singleMarketData.owner}</span>
-                        </div>
-                </div>
+  const handleWithDraw = () => {
+    dispatch(unlistNFT(productId));
+  };
 
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2 '>
-                    <div className=' px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Owner
-                    </div>
-                    <div className='flex flex-col px-s4 mx-4 my-2 font-mono w-full overflow-x-scroll'>
-                        <div className=''>
-                            <p className=' text-main-100 font-semibold p-0'>
-                            Owner 
-                            </p>
-                            <p className='text-primary-100'>
-                                {singleMarketData.owner}
-                            </p>
-                        </div>
-                        <div className=''>
-                            <p className=' text-main-100 font-semibold'>
-                            Seller 
-                            </p>
-                            <p className='text-primary-100'>
-                                {singleMarketData.owner}
-                            </p>
-                    </div>
-                    </div>
-                </div>
-
-                <div className='border-2 border-main-300 rounded bg-main-300 flex flex-col'>
-                    <div className='flex justify-between items-center px-2 py-1 border-b border-primary-500 bg-main-100 font-bold font-mono text-main-300'>
-                        CROP
-                        <div className='text-sm'>
-                            {singleMarketData.cropInfo.plantingDate}
-                        </div>
-                    </div>
-                    <img src={urlDN + singleMarketData.uri} className='m-2 border-2 border-main-100 p-0.5 self-center rounded-lg'/>
-                </div>
-
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Current Price
-                    </div>
-                    <div className='px-4 py-1 font-mono font-bold text-main-100 text-5xl flex gap-2'>
-                        {singleMarketData.price}
-                        <div className=''>
-                            FLP
-                        </div>
-                    </div>
-
-                    <div className='flex flex-col gap-2 w-full p-4'>
-                        <button className='flex items-center justify-between uppercase bg-main-100
-                        text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                        px-4 py-3 rounded-lg'>
-                            Buy now
-                            <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake
-                            className='text-2xl'/>
-                        </button>
-
-                        <button className='flex items-center justify-between uppercase bg-main-100
-                        text-primary-500 font-bold group hover:bg-main-200 hover:text-main-100
-                        px-4 py-3 rounded-lg'>
-                            Make Offer
-                            <FontAwesomeIcon icon="fa-solid fa-tag" spin
-                            className='text-2xl'/>
-                        </button>
-                    </div>
-                </div>
-
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Detailed Information
-                    </div>
-                    <div className='px-4 py-2'>
-                        <ul className='font-mono flex flex-col gap-1'>
-                            {
-                                Object.entries(singleMarketData.cropInfo).map(([key, value], index) => key !== "additionalInfo" && (    
-                                    <li key={index} className='flex gap-3 text-sm'>
-                                        <p className='uppercase font-semibold text-main-100 '>
-                                            {key}: 
-                                        </p>
-
-                                        <p className='text-primary-100'>
-                                            {value === "" ? "None" : value}
-                                        </p>
-                                    </li>
-                                ))
-                            }
-                        </ul>
-                    </div>
-                </div>
-                
-                <div className='border-2 border-main-300 rounded bg-main-300
-                flex flex-col gap-2'>
-                    <div className='px-2 py-1 uppercase bg-main-100 font-bold font-mono text-main-300 w-full border-b border-primary-500'>
-                        Description
-                    </div>
-                    <div className='px-4 py-2 text-main-100 font-semibold font-mono'>
-                        {singleMarketData.cropInfo.additionalInfo === "" ? "Nothing" : singleMarketData.cropInfo.additionalInfo}
-                    </div>
-                </div>
+  const handleBuyNFT = () => {
+    if (window.confirm('Are you sure to buy this NFT !')) {
+      dispatch(buyNFT(productId));
+    }
+  };
+  return (
+    <>
+      <div className="flex h-full w-full flex-col gap-4 ">
+        <Window label="Author">
+          <div className="no-scrollbar flex w-full flex-col overflow-x-scroll p-4 font-mono">
+            <div className="">
+              <p className=" p-0 font-semibold text-main-100">Owner</p>
+              <p className="text-primary-100">{data.owner}</p>
             </div>
-        </>
-    )
-}
+            <div className="">
+              <p className=" font-semibold text-main-100">Seller</p>
+              <p className="text-primary-100">{data.owner}</p>
+            </div>
+          </div>
+        </Window>
+
+        <Window
+          label={
+            <div className="flex items-center justify-between">
+              CROP
+              <div className="text-sm">{data.cropInfo.plantingDate}</div>
+            </div>
+          }
+        >
+          <div className="flex w-full flex-col justify-center p-4">
+            <img src={urlDN + data.uri} className="m-2 h-[250px] w-[250px] self-center rounded-lg border-2 border-main-100 object-scale-down p-0.5" />
+          </div>
+        </Window>
+
+        <Window label="Price">
+          <div className="p-4">
+            <div className="flex gap-2 font-mono text-5xl font-bold text-main-100">
+              {data.price}
+              <div className="">FLP</div>
+            </div>
+
+            {isOwner ? (
+              <div className="flex w-full flex-col gap-2 font-semibold text-main-100">
+                This is your product
+                <button
+                  onClick={handleWithDraw}
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 text-left font-bold
+                                uppercase text-primary-500 hover:bg-main-200 hover:text-main-100"
+                >
+                  Withdraw
+                  <FontAwesomeIcon icon="fa-solid fa-cart-arrow-down" bounce className="text-2xl" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex w-full flex-col gap-2 ">
+                <button
+                  onClick={handleBuyNFT}
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 font-bold uppercase
+                                text-primary-500 hover:bg-main-200 hover:text-main-100"
+                >
+                  Buy now
+                  <FontAwesomeIcon icon="fa-solid fa-cart-shopping" shake className="text-2xl" />
+                </button>
+
+                <button
+                  className="group flex items-center justify-between rounded-lg
+                                bg-main-100 px-4 py-3 font-bold uppercase
+                                text-primary-500 hover:bg-main-200 hover:text-main-100"
+                >
+                  Make Offer
+                  <FontAwesomeIcon icon="fa-solid fa-tag" spin className="text-2xl" />
+                </button>
+              </div>
+            )}
+          </div>
+        </Window>
+
+        <Window label="Detailed Information">
+          <div className="p-4">
+            <ul className="flex flex-col gap-1 font-mono">
+              {Object.entries(data.cropInfo).map(
+                ([key, value], index) =>
+                  key !== 'additionalInfo' && (
+                    <li key={index} className="flex gap-3 text-sm">
+                      <p className="font-semibold uppercase text-main-100 ">{key}:</p>
+
+                      <p className="text-primary-100">{value === '' ? 'None' : value}</p>
+                    </li>
+                  )
+              )}
+            </ul>
+          </div>
+        </Window>
+
+        <Window label="Description">
+          <div className="px-4 py-2 font-mono font-semibold text-main-100">{data.cropInfo.additionalInfo === '' ? 'Nothing' : data.cropInfo.additionalInfo}</div>
+        </Window>
+      </div>
+    </>
+  );
+};
 
 export default Product;

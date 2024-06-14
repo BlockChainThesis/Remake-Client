@@ -1,123 +1,220 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { authenticate } from "../Auth/Slice";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ethers } from 'ethers';
+import { controllerABI, controllerAddress } from '../../constant';
+import { setLoadingState } from '../Interface/Slice';
+import axios from 'axios';
+const { ethereum } = window;
 
-import { ethers } from 'ethers'
-import { controllerABI, controllerAddress } from "../../constant";
-import { setLoadingState } from "../Loading/Slice";
-const { ethereum } = window
-//Create Controller Contact 
+// Function to create a contract instance
 const createControllerContract = () => {
-    // const privateKey = import.meta.env.VITE_PRIVATE_KEY //to use this, create .env at root and include your private key there
-    const provider = new ethers.providers.Web3Provider(ethereum)
-    const signer = provider.getSigner() //comment this
-    // const wallet = new ethers.Wallet(privateKey, provider) //uncomment this
-    const controllerContract = new ethers.Contract(controllerAddress, controllerABI, signer) //change signer to wallet
-    return controllerContract
-}
-//Fetch data 
-export const fetchControllerData = createAsyncThunk(
-    'controller/fetchControllerData',
-    async (_,{dispatch, getState, rejectWithValue}) => {
-        const globalState = getState()
-        try {
-            dispatch(authenticate())
-            return globalState.auth.currentAccount
-        } catch (error) {
-            console.log(error)
-            return rejectWithValue(error.toString());
+  const provider = new ethers.providers.Web3Provider(ethereum);
+  const signer = provider.getSigner();
+  const controllerContract = new ethers.Contract(controllerAddress, controllerABI, signer); //change signer to wallet
+  return controllerContract;
+};
 
-        }
-    }   
-)
-
-//GEt all controllers Info 
-export const getAllControllersInfo = createAsyncThunk(
-    'controller/getAllControllersInfo',
-    async (_,{dispatch}) => {
-        try {
-            if(ethereum) {
-                dispatch(setLoadingState(true))
-                const controllerContract = createControllerContract()
-                const availableControllersInfo = await controllerContract.getAllControllersInfo()
-                const structuredControllersInfo = availableControllersInfo.map((controller) => ({
-                    deviceName: controller.deviceName,
-                    createAt: controller.createAt,
-                    value: parseInt(controller.value),
-                }))
-                dispatch(setLoadingState(false))
-                return structuredControllersInfo
-            } else {
-                //todo
-            }
-        }catch (error) {
-            console.log(error)
-        }
-
-    }   
-)
-
-//add Controller Info to BlockChain
-
-export const addControllerInfoToBlockChain = createAsyncThunk(
-    'controller/addControllerInfoToBlockChain', 
-    async () => {
-        try {
-            if (ethereum) {
-                const controllerContract = createControllerContract()
-
-                //format before adding if needed ...
-                const controllerHash = await controllerContract.addControllerInfo(controllers)
-                await controllerHash.wait() //important
-
-                const controllersCount = await controllerContract.getNumberOfControllersInfo()
-                return parseInt(controllersCount)
-            } else {
-                //todo
-            }
-        } catch (error) {
-            console.log(error)
-        }
+// Get history of controllers
+export const getHistoryController = createAsyncThunk('controller/getHistoryController', async (_, { dispatch }) => {
+  try {
+    if (ethereum) {
+      dispatch(setLoadingState(true));
+      const contract = createControllerContract();
+      const rawData = await contract.getHistoryController(100);
+      const structuredData = rawData.map((data) => ({
+        controllerId: data.controllerId,
+        controllerValue: data.controllerValue,
+        createAt: new Date(data.createAt.toNumber() * 1000).toLocaleString(),
+        stationId: data.stationId,
+      }));
+      dispatch(setLoadingState(false));
+      return structuredData;
     }
-)
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
 
+// Get all controllers
+export const getAllController = createAsyncThunk('controller/getAllController', async (_, { dispatch }) => {
+  try {
+    if (ethereum) {
+      dispatch(setLoadingState(true));
+      const contract = createControllerContract();
+      const rawData = await contract.getAllController();
+      const structuredData = rawData.map((controller) => ({
+        controllerId: controller.controllerId,
+        createAt: new Date(controller.createAt.toNumber() * 1000).toLocaleString(),
+        stationId: controller.stationId,
+        value: parseInt(controller.controllerValue),
+      }));
+      dispatch(setLoadingState(false));
+      return structuredData;
+    }
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+// Turn on valve controller
+export const turnOnController_valve = createAsyncThunk('controller/turnOnController_valve', async ({ stationId, sensorId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    await axios.post('http://127.0.0.1:5005/turn_on', {
+      station_id: stationId,
+      sensor_id: sensorId,
+    });
+    dispatch(
+      getControllerState_valve({
+        stationId: stationId,
+        controllerId: sensorId,
+      })
+    );
+    dispatch(setLoadingState(false));
+    return;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+// Turn on pump controller
+export const turnOnController_pump = createAsyncThunk('controller/turnOnController_pump', async ({ stationId, sensorId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    await axios.post('http://127.0.0.1:5006/turn_on', {
+      station_id: stationId,
+      sensor_id: sensorId,
+    });
+    dispatch(
+      getControllerState_pump({
+        stationId: stationId,
+        controllerId: sensorId,
+      })
+    );
+    dispatch(setLoadingState(false));
+    return;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+// Turn off valve controller
+export const turnOffController_valve = createAsyncThunk('controller/turnOffController_valve', async ({ stationId, sensorId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    await axios.post('http://127.0.0.1:5005/turn_off', {
+      station_id: stationId,
+      sensor_id: sensorId,
+    });
+    dispatch(setLoadingState(false));
+    dispatch(
+      getControllerState_valve({
+        stationId: stationId,
+        controllerId: sensorId,
+      })
+    );
+    return;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+//Turn off pump controller
+export const turnOffController_pump = createAsyncThunk('controller/turnOffController_valve', async ({ stationId, sensorId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    await axios.post('http://127.0.0.1:5006/turn_off', {
+      station_id: stationId,
+      sensor_id: sensorId,
+    });
+    dispatch(
+      getControllerState_pump({
+        stationId: stationId,
+        controllerId: sensorId,
+      })
+    );
+    dispatch(setLoadingState(false));
+    return;
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+//Get all type PUMP Controller state
+export const getControllerState_pump = createAsyncThunk('controller/getControllerState_pump', async ({ stationId, controllerId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const response = await axios.get(`http://127.0.0.1:5006/get_controller_value?station_id=${stationId}&controller_id=${controllerId}`);
+    dispatch(setLoadingState(false));
+    return {
+      id: controllerId,
+      value: response.data['controller_value'],
+    };
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
+
+//Get all type Valve Controller state
+export const getControllerState_valve = createAsyncThunk('controller/getControllerState_valve', async ({ stationId, controllerId }, { dispatch }) => {
+  try {
+    dispatch(setLoadingState(true));
+    const response = await axios.get(`http://127.0.0.1:5005/get_controller_value?station_id=${stationId}&controller_id=${controllerId}`);
+    dispatch(setLoadingState(false));
+    return {
+      id: controllerId,
+      value: response.data['controller_value'],
+    };
+  } catch (error) {
+    dispatch(setLoadingState(false));
+    window.alert('An error occurred: ' + error.code);
+  }
+});
 
 export const Slice = createSlice({
-    name:'controller',
-    initialState: {
-        controllersInfo: [],
-        controllersCount: 0,
-        controllerSignals: [0, 0, 0, 0, 0, 0, 0, 0],
+  name: 'controller',
+  initialState: {
+    controllers: {
+      data: [],
     },
-    reducers: {
-        updateSignal: (state, action) => {
-            const index = action.payload[0] - 1
-            const newSignal = action.payload[1]
-            state.controllerSignals[index] = newSignal
-        },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchControllerData.fulfilled, () => {
-                getAllControllersInfo()
-            })
-            .addCase(fetchControllerData.rejected, (action) => {
-                // Handle the rejected case
-                console.error('Connection failed:', action.payload)
-            })
-            .addCase(getAllControllersInfo.fulfilled, (state, action) => {
-                const sortedSensorsData = action.payload.sort(
-                    (sensorData1, sensorData2) =>
-                        new Date(sensorData2.createAt) - new Date(sensorData1.createAt)
-                )
-                state.controllersInfo = sortedSensorsData
-            })
-            .addCase(addControllerInfoToBlockChain.fulfilled, (state, action) => {
-                state.controllersCount = action.payload
-            })
-    }
-})
+    pumpState: [],
+    valveState: [],
+    controllerHistory: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllController.fulfilled, (state, action) => {
+        state.controllers.data = action.payload;
+      })
+      // Add new state or replace an existing one
+      .addCase(getControllerState_pump.fulfilled, (state, action) => {
+        const index = state.pumpState.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) {
+          state.pumpState[index] = action.payload;
+        } else {
+          state.pumpState.push(action.payload);
+        }
+      })
+      // Add new state or replace an existing one
+      .addCase(getControllerState_valve.fulfilled, (state, action) => {
+        const index = state.valveState.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) {
+          state.valveState[index] = action.payload;
+        } else {
+          state.valveState.push(action.payload);
+        }
+      })
+      .addCase(getHistoryController.fulfilled, (state, action) => {
+        state.controllerHistory = action.payload;
+      });
+  },
+});
 
-// Action creators are generated for each case reducer function
-export const { updateSignal } = Slice.actions
-
-export default Slice.reducer
+export default Slice.reducer;
