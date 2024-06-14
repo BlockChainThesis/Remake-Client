@@ -1,8 +1,37 @@
-# React + Vite
+# Introduction
+- This Blockchain-based application designed to enhance transparency, traceability, and efficiency in agricultural supply chains. 
+- This client application allows users to interact with the system, manage crops, monitor environmental data, and perform secure transactions.
+# Technologies Used
+- **Frontend**: HTML, TailwindCSS, CSS, JavaScript
+- **Blockchain**: Ethereum, Smart Contracts (Solidity)
+- **Libraries and Frameworks**:
+  - React for UI development
+  - Ethers.js for interacting with Ethereum blockchain
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Requirements: 
+- Node.js (>=14.x)
+- npm (>=6.x)
+- MetaMask extension for interacting with the Ethereum blockchain
 
-Currently, two official plugins are available:
+## How to install:
+```
+npm install
+```
+## How to run:
+```
+npm run dev
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Features:
+## Device Monitor:
+![Dahboard #1](demo/devices.png)
+
+![Dahboard #2](demo/controller.png)
+
+## NFT Transaction:
+![NFT Transaction #1](demo/create.png)
+
+![NFT Transaction #2](demo/buy.png)
+
+## Market Features:
+![Market Features](demo/market.png)
